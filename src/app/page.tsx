@@ -282,6 +282,18 @@ function Header() {
         >
           Employee Health
         </a>
+        <a
+          href="/kids-dashboard"
+          className="hidden items-center gap-2 rounded-full bg-ion px-4 py-2 text-sm font-semibold text-white shadow-hairline transition hover:bg-ink xl:inline-flex"
+        >
+          Kids Dashboard
+        </a>
+        <a
+          href="/gym-twin-dashboard"
+          className="hidden items-center gap-2 rounded-full bg-[#5b35f5] px-4 py-2 text-sm font-semibold text-white shadow-hairline transition hover:bg-ink xl:inline-flex"
+        >
+          Gym Twin
+        </a>
       </div>
     </header>
   );
@@ -318,6 +330,12 @@ function Hero() {
             </a>
             <a href="/employee-health-dashboard" className="inline-flex items-center gap-2 rounded-full border border-clinical/20 bg-white px-5 py-3 font-semibold text-clinical shadow-hairline">
               Employee Health Dashboard <HeartPulse size={18} />
+            </a>
+            <a href="/kids-dashboard" className="inline-flex items-center gap-2 rounded-full border border-ion/20 bg-white px-5 py-3 font-semibold text-ion shadow-hairline">
+              Kids Digital Twin <Brain size={18} />
+            </a>
+            <a href="/gym-twin-dashboard" className="inline-flex items-center gap-2 rounded-full border border-[#5b35f5]/20 bg-white px-5 py-3 font-semibold text-[#5b35f5] shadow-hairline">
+              Gym Digital Twin <Activity size={18} />
             </a>
           </div>
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
