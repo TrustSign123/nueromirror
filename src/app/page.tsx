@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 import {
   Area,
   AreaChart,
@@ -87,6 +89,135 @@ const inviteFunnelData = [
   { stage: "Registered", users: 244 },
   { stage: "Reports", users: 176 }
 ];
+
+const trustedLogos = [
+  { name: "Apple", slug: "apple" },
+  { name: "Tesla", slug: "tesla" },
+  { name: "OpenAI", slug: "openai" },
+  { name: "Stripe", slug: "stripe" },
+  { name: "Vercel", slug: "vercel" },
+  { name: "Microsoft", slug: "microsoft" },
+  { name: "Garmin", slug: "garmin" },
+  { name: "Fitbit", slug: "fitbit" },
+  { name: "GitHub", slug: "github" }
+];
+
+function HeroOrganOrb({
+  organ,
+  position,
+  scale
+}: {
+  organ: (typeof organs)[number];
+  position: [number, number, number];
+  scale: [number, number, number];
+}) {
+  const setSelectedOrganId = useTwinStore((state) => state.setSelectedOrganId);
+  const selectedOrganId = useTwinStore((state) => state.selectedOrganId);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const selected = selectedOrganId === organ.id;
+
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    const pulse = 1 + Math.sin(clock.getElapsedTime() * 4.2 + organ.score) * (selected ? 0.085 : 0.04);
+    meshRef.current.scale.set(scale[0] * pulse, scale[1] * pulse, scale[2] * pulse);
+  });
+
+  return (
+    <mesh ref={meshRef} position={position} onClick={() => setSelectedOrganId(organ.id)}>
+      <sphereGeometry args={[1, 40, 40]} />
+      <meshStandardMaterial
+        color={organ.color}
+        emissive={organ.color}
+        emissiveIntensity={selected ? 0.58 : 0.2}
+        roughness={0.22}
+        transparent
+        opacity={organ.id === "lungs" ? 0.42 : 0.86}
+      />
+    </mesh>
+  );
+}
+
+function HeroDigitalHuman() {
+  const groupRef = useRef<THREE.Group>(null);
+  const organMap = useMemo(() => new Map(organs.map((organ) => [organ.id, organ])), []);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y = Math.sin(clock.getElapsedTime() * 0.34) * 0.2;
+  });
+
+  return (
+    <group ref={groupRef}>
+      <mesh position={[0, 0.38, 0]} scale={[0.86, 1, 0.48]}>
+        <capsuleGeometry args={[0.96, 2.25, 22, 42]} />
+        <meshPhysicalMaterial color="#f0f7ff" roughness={0.28} transmission={0.22} thickness={1.1} transparent opacity={0.62} clearcoat={0.8} />
+      </mesh>
+      <mesh position={[0, 2.3, 0]} scale={[0.94, 1.06, 0.9]}>
+        <sphereGeometry args={[0.48, 48, 48]} />
+        <meshPhysicalMaterial color="#eef8ff" roughness={0.3} transmission={0.18} transparent opacity={0.66} />
+      </mesh>
+      <mesh position={[0, 0.62, 0.08]}>
+        <cylinderGeometry args={[0.035, 0.035, 2.25, 18]} />
+        <meshStandardMaterial color="#8bb8c8" transparent opacity={0.52} />
+      </mesh>
+      <HeroOrganOrb organ={organMap.get("heart")!} position={[0, 0.98, 0.16]} scale={[0.22, 0.25, 0.16]} />
+      <HeroOrganOrb organ={organMap.get("brain")!} position={[0, 2.39, 0.07]} scale={[0.33, 0.18, 0.23]} />
+      <HeroOrganOrb organ={organMap.get("lungs")!} position={[0, 1.16, 0.08]} scale={[0.56, 0.38, 0.11]} />
+      <HeroOrganOrb organ={organMap.get("liver")!} position={[0.32, 0.56, 0.12]} scale={[0.34, 0.19, 0.13]} />
+      <HeroOrganOrb organ={organMap.get("kidney")!} position={[-0.33, 0.28, 0.11]} scale={[0.16, 0.22, 0.1]} />
+      <HeroOrganOrb organ={organMap.get("metabolism")!} position={[0, -0.18, 0.13]} scale={[0.33, 0.18, 0.12]} />
+      <HeroOrganOrb organ={organMap.get("sleep")!} position={[-0.42, 1.86, 0.08]} scale={[0.11, 0.11, 0.08]} />
+      <HeroOrganOrb organ={organMap.get("stress")!} position={[0.42, 1.86, 0.08]} scale={[0.11, 0.11, 0.08]} />
+    </group>
+  );
+}
+
+function HeroDigitalHumanCanvas() {
+  return (
+    <Canvas camera={{ position: [0, 1.45, 7.5], fov: 36 }} dpr={[1, 2]}>
+      <ambientLight intensity={2.3} />
+      <directionalLight position={[4, 6, 4]} intensity={2.5} />
+      <pointLight position={[-3, 2, 3]} intensity={1.4} color="#7c3aed" />
+      <HeroDigitalHuman />
+      <OrbitControls enablePan={false} minDistance={5.4} maxDistance={8.5} />
+    </Canvas>
+  );
+}
+
+function TrustLogoMarquee() {
+  const logoLoop = [...trustedLogos, ...trustedLogos];
+
+  return (
+    <section className="border-y border-ink/10 bg-white/80 py-7">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center">
+          <p className="w-full text-sm font-semibold uppercase tracking-[0.18em] text-graphite md:w-64">
+            Inspired by teams building the future
+          </p>
+          <div className="relative flex-1 overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white to-transparent" />
+            <div className="logo-marquee flex items-center gap-4">
+              {logoLoop.map((logo, index) => (
+                <div
+                  key={`${logo.slug}-${index}`}
+                  className="flex h-14 min-w-40 items-center justify-center gap-3 rounded-lg border border-ink/10 bg-white px-5 shadow-hairline"
+                >
+                  <img
+                    src={`https://cdn.simpleicons.org/${logo.slug}/172126`}
+                    alt={`${logo.name} logo`}
+                    className="h-5 w-5 object-contain"
+                  />
+                  <span className="text-sm font-semibold text-ink">{logo.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function ThreeHumanTwin() {
   const mountRef = useRef<HTMLDivElement | null>(null);
@@ -310,26 +441,28 @@ function Hero() {
       <div className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl items-center gap-8 px-4 pb-12 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-clinical/20 bg-white/70 px-3 py-1 text-sm font-medium text-clinical shadow-hairline">
-            <Activity size={15} /> Your Personal Health Digital Twin
+            <Activity size={15} /> AI-powered Digital Twin for every human
           </div>
           <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-normal text-ink sm:text-6xl lg:text-7xl">
-            Neuromirror
+            Your Digital Twin For Life
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-graphite sm:text-xl">
-            Our goal is to improve the health of every person on the globe through preventive health powered by a
-            personal digital twin. Medical-grade digital twins for people, care teams, employers, campuses, insurers,
-            and public health programs simulate organ risk, explain reports, and turn fragmented health data into
-            trusted action.
+            One intelligent platform that understands your health, fitness, growth, wellbeing, and future risks.
+            Continuously learning. Continuously improving. Powered by AI to improve the health of every person on the
+            globe through preventive health.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#platform" className="inline-flex items-center gap-2 rounded-full bg-clinical px-5 py-3 font-semibold text-white shadow-glass">
-              Explore Platform <ChevronRight size={18} />
+            <a href="/employee-health-dashboard" className="inline-flex items-center gap-2 rounded-full bg-clinical px-5 py-3 font-semibold text-white shadow-glass">
+              Experience My Twin <ChevronRight size={18} />
             </a>
             <a href="#ai-copilot" className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-3 font-semibold text-ink shadow-hairline">
-              AI Copilot <MessageSquareText size={18} />
+              Watch Demo <Play size={18} />
             </a>
-            <a href="/employee-health-dashboard" className="inline-flex items-center gap-2 rounded-full border border-clinical/20 bg-white px-5 py-3 font-semibold text-clinical shadow-hairline">
-              Employee Health Dashboard <HeartPulse size={18} />
+            <a href="#book-demo" className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-3 font-semibold text-ink shadow-hairline">
+              Book Enterprise Demo <MessageSquareText size={18} />
+            </a>
+            <a href="#platform" className="inline-flex items-center gap-2 rounded-full border border-clinical/20 bg-white px-5 py-3 font-semibold text-clinical shadow-hairline">
+              Explore Platform <HeartPulse size={18} />
             </a>
             <a href="/kids-dashboard" className="inline-flex items-center gap-2 rounded-full border border-ion/20 bg-white px-5 py-3 font-semibold text-ion shadow-hairline">
               Kids Digital Twin <Brain size={18} />
@@ -349,12 +482,36 @@ function Hero() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="relative">
-          <div className="glass relative overflow-hidden rounded-lg">
-            <div className="absolute left-4 top-4 z-10 rounded-full bg-white/86 px-3 py-1 text-sm font-semibold text-ink shadow-hairline">
-              Live Organ Simulation
+          <div className="glass relative overflow-hidden rounded-lg border border-white/70">
+            <div className="absolute left-4 top-4 z-10 flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-ink shadow-hairline">
+                Live 3D Organ Simulation
+              </span>
+              <span className="rounded-full bg-clinical px-3 py-1 text-sm font-semibold text-white shadow-hairline">
+                {selected.score}/100 {selected.risk} risk
+              </span>
             </div>
-            <ThreeHumanTwin />
-            <div className="absolute bottom-4 left-4 right-4 grid gap-3 rounded-lg border border-ink/10 bg-white/88 p-4 shadow-glass backdrop-blur-xl md:grid-cols-[0.8fr_1.2fr]">
+            <div className="h-[620px] md:h-[700px]">
+              <HeroDigitalHumanCanvas />
+            </div>
+            <div className="absolute right-4 top-20 hidden w-56 rounded-lg border border-ink/10 bg-white/90 p-4 shadow-glass backdrop-blur-xl sm:block">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-graphite">What-if prediction</p>
+              <div className="mt-3 space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-graphite">Heart risk</span>
+                  <span className="font-semibold text-clinical">22% &rarr; 11%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-graphite">Fatty liver</span>
+                  <span className="font-semibold text-clinical">65% &rarr; 38%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-graphite">Biological age</span>
+                  <span className="font-semibold text-clinical">36 &rarr; 31</span>
+                </div>
+              </div>
+            </div>
+            <div className="absolute bottom-4 left-4 right-4 grid gap-3 rounded-lg border border-ink/10 bg-white/90 p-4 shadow-glass backdrop-blur-xl md:grid-cols-[0.8fr_1.2fr]">
               <div>
                 <p className="text-sm text-graphite">Selected organ</p>
                 <div className="mt-1 flex items-center gap-3">
@@ -1074,6 +1231,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <TrustLogoMarquee />
         <Platform />
         <SaaSOperations />
         <InvitationsAndAccess />
