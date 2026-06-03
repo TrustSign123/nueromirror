@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as d3 from "d3";
 import {
@@ -444,6 +444,7 @@ export function HealthCopilotPanel() {
   const [error, setError] = useState("");
   const { latestReportAnalysis, vectorStoreId } = useEmployeeTwinStore();
   const prompts = ["Explain my HbA1c", "Why is my liver score low?", "Generate doctor summary", "Prepare diet plan"];
+  const userContext = `${employeeProfile.name}, employee ${employeeProfile.employeeId}, age ${employeeProfile.actualAge}, current overall score ${employeeProfile.overallScore}, biological age ${employeeProfile.biologicalAge}, latest weight ${employeeProfile.bodyWeight}, sleep last night ${employeeProfile.sleepLastNight}, steps today ${employeeProfile.stepsToday}.`;
 
   const sendMessage = async (nextMessage = message) => {
     const trimmed = nextMessage.trim();
@@ -463,7 +464,8 @@ export function HealthCopilotPanel() {
           message: trimmed,
           history: chatMessages,
           vectorStoreId,
-          reportSummary: latestReportAnalysis?.summary
+          reportSummary: latestReportAnalysis?.summary,
+          userContext
         })
       });
       const payload = (await response.json()) as { answer?: string; error?: string };
@@ -498,6 +500,9 @@ export function HealthCopilotPanel() {
           <div className="rounded-lg border border-clinical/20 bg-clinical/5 p-4 text-sm leading-6 text-ink">
             <p className="font-semibold text-clinical">Latest report loaded</p>
             <p className="mt-1">{latestReportAnalysis.summary}</p>
+            <p className="mt-2 text-xs font-semibold text-graphite">
+              {latestReportAnalysis.isRelevant ? "Report memory is active for this chat." : `Not used for marker updates: ${latestReportAnalysis.relevanceReason}`}
+            </p>
           </div>
         )}
         {chatMessages.map((item, index) => (
@@ -711,6 +716,7 @@ export function RecommendationPanel() {
 export function UploadReportWidget() {
   const [activeStep, setActiveStep] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [downloadUrl, setDownloadUrl] = useState("");
   const [analysis, setAnalysis] = useState<ReportAnalysisResult | null>(null);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -718,6 +724,14 @@ export function UploadReportWidget() {
   const applyReportAnalysis = useEmployeeTwinStore((state) => state.applyReportAnalysis);
   const current = uploadSteps[activeStep];
   const loading = uploading || (activeStep > 0 && activeStep < uploadSteps.length - 1);
+
+  useEffect(() => {
+    return () => {
+      if (downloadUrl) {
+        URL.revokeObjectURL(downloadUrl);
+      }
+    };
+  }, [downloadUrl]);
 
   const uploadReport = async () => {
     if (!selectedFile || uploading) {
@@ -750,7 +764,9 @@ export function UploadReportWidget() {
       }
 
       const result = payload as ReportAnalysisResult;
-      applyReportAnalysis(result);
+      if (result.isRelevant) {
+        applyReportAnalysis(result);
+      }
       setAnalysis(result);
       setActiveStep(uploadSteps.length - 1);
     } catch (uploadError) {
@@ -778,8 +794,14 @@ export function UploadReportWidget() {
           accept="application/pdf"
           className="hidden"
           onChange={(event) => {
-            setSelectedFile(event.target.files?.[0] ?? null);
+            const file = event.target.files?.[0] ?? null;
+            setSelectedFile(file);
+            setAnalysis(null);
             setError("");
+            if (downloadUrl) {
+              URL.revokeObjectURL(downloadUrl);
+            }
+            setDownloadUrl(file ? URL.createObjectURL(file) : "");
           }}
         />
         <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -792,16 +814,30 @@ export function UploadReportWidget() {
         </div>
       </div>
       {error && <p className="mt-3 rounded-lg bg-pulse/10 p-3 text-sm font-semibold text-pulse">{error}</p>}
+      {downloadUrl && selectedFile && (
+        <a href={downloadUrl} download={selectedFile.name} className="mt-3 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline">
+          <FileText size={16} /> Download uploaded PDF
+        </a>
+      )}
       {analysis && (
-        <div className="mt-4 rounded-lg border border-clinical/20 bg-clinical/5 p-4">
-          <p className="text-sm font-semibold text-clinical">AI analysis complete</p>
-          <p className="mt-2 text-sm leading-6 text-ink">{analysis.summary}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {analysis.biomarkers.slice(0, 6).map((biomarker) => (
-              <span key={biomarker.name} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-hairline">
-                {biomarker.name}: {biomarker.value}{biomarker.unit ? ` ${biomarker.unit}` : ""}
-              </span>
-            ))}
+        <div className={`mt-4 rounded-lg border p-4 ${analysis.isRelevant ? "border-clinical/20 bg-clinical/5" : "border-amber/30 bg-amber/10"}`}>
+          <p className={`text-sm font-semibold ${analysis.isRelevant ? "text-clinical" : "text-amber"}`}>
+            {analysis.isRelevant ? "Health report analyzed" : "Document not relevant"}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-ink">{analysis.isRelevant ? analysis.summary : analysis.relevanceReason}</p>
+          {analysis.isRelevant && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {analysis.biomarkers.slice(0, 6).map((biomarker) => (
+                <span key={biomarker.name} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-hairline">
+                  {biomarker.name}: {biomarker.value}{biomarker.unit ? ` ${biomarker.unit}` : ""}
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="mt-3 rounded-lg bg-white p-3 text-xs leading-5 text-graphite">
+            {analysis.isRelevant
+              ? "Markers were updated on the dashboard and the report is indexed in RAG memory for Copilot questions."
+              : "Dashboard markers were not changed. Upload a lab report, prescription, diagnostic report, or health checkup PDF for full analysis."}
           </div>
         </div>
       )}

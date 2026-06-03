@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { analyzeReportFromVectorStore, attachFileToVectorStore, getOrCreateVectorStore, uploadReportFile } from "@/lib/openai-rag";
+import {
+  analyzeReportFromVectorStore,
+  attachFileToVectorStore,
+  deleteOpenAIFile,
+  getOrCreateVectorStore,
+  removeFileFromVectorStore,
+  uploadReportFile
+} from "@/lib/openai-rag";
 
 export const runtime = "nodejs";
 
@@ -18,11 +25,16 @@ export async function POST(request: NextRequest) {
 
     const uploadedFile = await uploadReportFile(file);
     const vectorStoreId = await getOrCreateVectorStore();
-    await attachFileToVectorStore(vectorStoreId, uploadedFile.id);
+    const vectorStoreFile = await attachFileToVectorStore(vectorStoreId, uploadedFile.id);
     const analysis = await analyzeReportFromVectorStore({
       file: uploadedFile,
       vectorStoreId
     });
+
+    if (!analysis.isRelevant) {
+      await removeFileFromVectorStore(vectorStoreId, vectorStoreFile.id);
+      await deleteOpenAIFile(uploadedFile.id);
+    }
 
     return NextResponse.json(analysis);
   } catch (error) {

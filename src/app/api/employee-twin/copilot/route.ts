@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
       history?: Array<{ role: "user" | "assistant"; content: string }>;
       vectorStoreId?: string | null;
       reportSummary?: string;
+      userContext?: string;
     };
 
     if (!body.message?.trim()) {
@@ -20,7 +21,8 @@ export async function POST(request: NextRequest) {
       message: body.message,
       history: body.history,
       vectorStoreId: body.vectorStoreId,
-      reportSummary: body.reportSummary
+      reportSummary: body.reportSummary,
+      userContext: body.userContext
     });
 
     return NextResponse.json({ answer });

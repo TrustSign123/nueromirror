@@ -40,9 +40,11 @@ export const useEmployeeTwinStore = create<EmployeeTwinState>((set) => ({
   applyReportAnalysis: (analysis) =>
     set((state) => {
       const nextUpdates = { ...state.biomarkerUpdates };
-      analysis.biomarkers.forEach((biomarker) => {
-        nextUpdates[biomarker.name.toLowerCase()] = biomarker;
-      });
+      if (analysis.isRelevant) {
+        analysis.biomarkers.forEach((biomarker) => {
+          nextUpdates[biomarker.name.toLowerCase()] = biomarker;
+        });
+      }
 
       return {
         biomarkerUpdates: nextUpdates,

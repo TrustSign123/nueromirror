@@ -47,6 +47,8 @@ export type ReportAnalysisResult = {
   fileName?: string;
   fileId?: string;
   vectorStoreId?: string;
+  isRelevant: boolean;
+  relevanceReason: string;
   summary: string;
   biomarkers: BiomarkerUpdate[];
   organInsights: Array<{

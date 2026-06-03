@@ -101,6 +101,18 @@ export async function attachFileToVectorStore(vectorStoreId: string, fileId: str
   return waitForVectorStoreFile(vectorStoreId, vectorStoreFile.id);
 }
 
+export async function removeFileFromVectorStore(vectorStoreId: string, fileId: string) {
+  await openaiFetch<{ id: string; deleted: boolean }>(`/vector_stores/${vectorStoreId}/files/${fileId}`, {
+    method: "DELETE"
+  });
+}
+
+export async function deleteOpenAIFile(fileId: string) {
+  await openaiFetch<{ id: string; deleted: boolean }>(`/files/${fileId}`, {
+    method: "DELETE"
+  });
+}
+
 async function waitForVectorStoreFile(vectorStoreId: string, vectorStoreFileId: string) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
     const vectorStoreFile = await openaiFetch<VectorStoreFile>(`/vector_stores/${vectorStoreId}/files/${vectorStoreFileId}`);
@@ -161,12 +173,12 @@ export async function analyzeReportFromVectorStore(params: {
         {
           role: "system",
           content:
-            "You are NeuroMirror's health report analysis engine. Extract lab markers from the uploaded report using file search. Do not diagnose. Return only valid JSON."
+            "You are NeuroMirror's health report analysis engine. First decide if the uploaded PDF is a personal health, lab, diagnostic, wearable, prescription, hospital, or medical report. Do not diagnose. Return only valid JSON."
         },
         {
           role: "user",
           content:
-            "Analyze the latest uploaded employee health report. Return JSON with keys: summary string, biomarkers array of {name,value,unit,status,note}, organInsights array of {organ,score,risk,insight}, recommendations array of strings. Status must be one of Normal, Low, Borderline, High. Keep values short and dashboard-ready."
+            "Review the latest uploaded PDF. Return JSON with keys: isRelevant boolean, relevanceReason string, summary string, biomarkers array of {name,value,unit,status,note}, organInsights array of {organ,score,risk,insight}, recommendations array of strings. If the PDF is not a health/medical report, set isRelevant false, explain why in relevanceReason, keep biomarkers/organInsights/recommendations empty, and do not invent markers. If it is relevant, extract real markers only. Status must be one of Normal, Low, Borderline, High. Keep values short and dashboard-ready."
         }
       ]
     })
@@ -187,6 +199,7 @@ export async function askCopilot(params: {
   history?: Array<{ role: "user" | "assistant"; content: string }>;
   vectorStoreId?: string | null;
   reportSummary?: string;
+  userContext?: string;
 }) {
   const vectorStoreId = params.vectorStoreId ?? process.env.OPENAI_VECTOR_STORE_ID ?? runtimeVectorStoreId;
   const tools = vectorStoreId
@@ -207,7 +220,7 @@ export async function askCopilot(params: {
         {
           role: "system",
           content:
-            "You are NeuroMirror AI Health Copilot. Answer from the uploaded health report when available. Be concise, cite uncertainty, and say this is informational guidance rather than diagnosis."
+            `You are NeuroMirror AI Health Copilot. You are talking to the signed-in member, and should recognize them from the provided user context. Answer from the uploaded health report when available. Be concise, cite uncertainty, and say this is informational guidance rather than diagnosis.${params.userContext ? `\n\nUser context: ${params.userContext}` : ""}`
         },
         ...(params.history ?? []).slice(-8).map((item) => ({
           role: item.role,
