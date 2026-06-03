@@ -124,15 +124,16 @@ function HumanTwinScene() {
 
 export function EmployeeHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-ink/10 bg-white/86 backdrop-blur-xl">
-      <div className="flex flex-wrap items-center justify-between gap-4 px-4 py-4 lg:px-6">
+    <header className="sticky top-0 z-40 border-b border-ink/10 bg-white/90 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-[1680px] flex-wrap items-center justify-between gap-4 px-4 py-4 lg:px-6">
         <div>
-          <h1 className="text-2xl font-semibold text-ink sm:text-3xl">Good Morning, {employeeProfile.name.split(" ")[0]}</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clinical">Employee Digital Twin</p>
+          <h1 className="mt-1 text-2xl font-semibold text-ink sm:text-3xl">Good Morning, {employeeProfile.name.split(" ")[0]}</h1>
           <p className="mt-1 text-sm text-graphite">Here is your preventive health overview for today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <a href="/login" className="rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline">Switch Portal</a>
-          <div className="hidden text-right sm:block">
+          <a href="/login" className="rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline transition hover:border-ion/30 hover:text-ion">Switch Portal</a>
+          <div className="hidden rounded-full border border-ink/10 bg-white px-4 py-2 text-right shadow-hairline sm:block">
             <p className="font-semibold text-ink">{employeeProfile.name}</p>
             <p className="text-xs text-graphite">Employee ID: {employeeProfile.employeeId}</p>
           </div>
@@ -143,36 +144,84 @@ export function EmployeeHeader() {
 }
 
 export function EmployeeSidebar() {
-  const items = ["Dashboard", "Health Twin", "Reports", "Upload Data", "Wearables", "Health Copilot", "Goals & Plans", "Medications", "Appointments", "Family Health", "Rewards", "Settings"];
+  const primaryItems = [
+    { label: "Dashboard", href: "#dashboard", icon: Activity },
+    { label: "Health Twin", href: "#health-twin", icon: Brain },
+    { label: "Reports", href: "#reports", icon: FileText },
+    { label: "Upload Data", href: "#upload-data", icon: UploadCloud },
+    { label: "Wearables", href: "#wearables", icon: Watch },
+    { label: "Health Copilot", href: "#health-copilot", icon: MessageSquareText }
+  ];
+  const secondaryItems = ["Goals", "Meds", "Visits", "Family"];
+
   return (
-    <aside className="hidden min-h-screen w-72 shrink-0 border-r border-ink/10 bg-white p-5 xl:block">
-      <a href="/" className="flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-full bg-ion text-white">
-          <Brain size={22} />
-        </span>
-        <div>
-          <p className="text-lg font-semibold text-ink">NeuroMirror</p>
-          <p className="text-xs text-graphite">Your Personal Health Digital Twin</p>
+    <aside className="hidden h-screen w-64 shrink-0 border-r border-ink/10 bg-white/94 xl:sticky xl:top-0 xl:flex xl:flex-col">
+      <div className="p-5">
+        <a href="/" className="flex items-center gap-3">
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white">
+            <Brain size={20} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-lg font-semibold text-ink">NeuroMirror</p>
+            <p className="truncate text-xs text-graphite">Personal health twin</p>
+          </div>
+        </a>
+
+        <div className="mt-6 rounded-lg border border-ink/10 bg-mist p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase text-graphite">Health Score</p>
+              <p className="mt-1 text-3xl font-semibold text-ink">{employeeProfile.overallScore}<span className="text-sm text-graphite">/100</span></p>
+            </div>
+            <span className="rounded-full bg-clinical/10 px-3 py-1 text-xs font-semibold text-clinical">{employeeProfile.category}</span>
+          </div>
+          <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+            <div className="h-full rounded-full bg-clinical" style={{ width: `${employeeProfile.overallScore}%` }} />
+          </div>
+          <p className="mt-3 text-xs font-semibold text-clinical">{employeeProfile.trend}</p>
         </div>
-      </a>
-      <nav className="mt-10 space-y-2">
-        {items.map((item, index) => (
-          <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`} className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold ${index === 0 ? "bg-ion text-white" : "text-graphite hover:bg-mist hover:text-ink"}`}>
-            {index === 0 ? <Activity size={18} /> : <ChevronRight size={17} />}
-            {item}
-          </a>
-        ))}
-      </nav>
-      <div className="mt-10 rounded-lg bg-mist p-5">
-        <p className="text-sm font-semibold text-ink">Health Score</p>
-        <div className="mt-5 grid h-32 place-items-center rounded-full border-[12px] border-clinical text-center">
-          <div>
-            <p className="text-4xl font-semibold text-ink">{employeeProfile.overallScore}</p>
-            <p className="text-xs text-graphite">/100</p>
+      </div>
+
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 pb-5">
+        <p className="px-3 text-xs font-semibold uppercase tracking-[0.14em] text-graphite">Workspace</p>
+        <div className="mt-3 space-y-1">
+          {primaryItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition ${
+                  index === 0 ? "bg-ion text-white shadow-hairline" : "text-graphite hover:bg-mist hover:text-ink"
+                }`}
+              >
+                <Icon size={17} />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
+        </div>
+
+        <div className="mt-6 border-t border-ink/10 pt-5">
+          <p className="px-3 text-xs font-semibold uppercase tracking-[0.14em] text-graphite">More</p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {secondaryItems.map((item) => (
+              <a key={item} href="#book-demo" className="rounded-lg border border-ink/10 bg-white px-3 py-2 text-center text-xs font-semibold text-graphite shadow-hairline transition hover:border-ion/30 hover:text-ion">
+                {item}
+              </a>
+            ))}
           </div>
         </div>
-        <p className="mt-4 text-center font-semibold text-clinical">{employeeProfile.category}</p>
-        <p className="mt-2 text-center text-xs text-graphite">{employeeProfile.trend}</p>
+      </nav>
+
+      <div className="border-t border-ink/10 p-4">
+        <div className="rounded-lg bg-ink p-4 text-white">
+          <p className="text-sm font-semibold">Next best action</p>
+          <p className="mt-2 text-xs leading-5 text-white/70">Upload your latest report and ask Copilot what changed.</p>
+          <a href="#upload-data" className="mt-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-semibold text-ink">
+            Upload Report <ChevronRight size={14} />
+          </a>
+        </div>
       </div>
     </aside>
   );

@@ -32,7 +32,7 @@ export default function EmployeeHealthDashboardPage() {
           <EmployeeSidebar />
           <div className="min-w-0 flex-1">
             <EmployeeHeader />
-            <main className="space-y-5 p-4 lg:p-6">
+            <main className="mx-auto max-w-[1680px] space-y-5 p-4 lg:p-6">
               <TopMetricCards />
               <div className="grid gap-5 2xl:grid-cols-[1fr_390px]">
                 <div className="space-y-5">
