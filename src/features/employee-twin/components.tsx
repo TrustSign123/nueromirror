@@ -10,6 +10,7 @@ import {
   Check,
   ChevronRight,
   FileText,
+  HeartHandshake,
   HeartPulse,
   Loader2,
   MessageSquareText,
@@ -150,6 +151,7 @@ export function EmployeeSidebar() {
     { label: "Reports", href: "#reports", icon: FileText },
     { label: "Upload Data", href: "#upload-data", icon: UploadCloud },
     { label: "Wearables", href: "#wearables", icon: Watch },
+    { label: "Care Hub", href: "/care-hub", icon: HeartHandshake },
     { label: "Health Copilot", href: "#health-copilot", icon: MessageSquareText }
   ];
   const secondaryItems = ["Goals", "Meds", "Visits", "Family"];

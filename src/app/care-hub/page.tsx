@@ -741,22 +741,6 @@ export default function CareHubPage() {
               </section>
             </div>
 
-            <section className="rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-              <SectionHeader eyebrow="Enterprise Architecture" title="Azure, event-driven, and LangGraph blueprint" icon={Network} />
-              <div className="mt-5 grid gap-4 md:grid-cols-3">
-                {[
-                  ["Azure Deployment", "Next.js app on Azure App Service or Container Apps, API services behind API Management, PostgreSQL, Blob Storage, Service Bus, Key Vault, App Insights."],
-                  ["Event Architecture", "Care actions publish domain events. Consumers update twin state, recalculate risk, trigger notifications, write audit logs, and refresh recommendations."],
-                  ["LangGraph Agents", "Supervisor agent routes to medical, nutrition, fitness, wellness, student, and compliance agents with RAG over reports, plans, notes, and history."]
-                ].map(([title, detail]) => (
-                  <article key={title} className="rounded-lg border border-ink/10 p-4">
-                    <p className="font-semibold text-ink">{title}</p>
-                    <p className="mt-2 text-sm leading-6 text-graphite">{detail}</p>
-                  </article>
-                ))}
-              </div>
-            </section>
-
             <section className="rounded-lg border border-ink/10 bg-ink p-5 text-white shadow-hairline">
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                 <div>
