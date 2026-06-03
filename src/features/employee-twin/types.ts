@@ -1,6 +1,7 @@
 export type OrganId = "brain" | "heart" | "liver" | "kidney" | "lungs" | "sleep" | "stress" | "metabolism";
 
 export type RiskLevel = "Low" | "Medium" | "High" | "Needs Care";
+export type BiomarkerStatus = "Normal" | "Low" | "Borderline" | "High";
 
 export type OrganScore = {
   id: OrganId;
@@ -29,9 +30,32 @@ export type RiskPrediction = {
 export type Biomarker = {
   name: string;
   value: string;
-  status: "Normal" | "Low" | "Borderline" | "High";
+  status: BiomarkerStatus;
   unit: string;
   data: Array<{ month: string; value: number }>;
+};
+
+export type BiomarkerUpdate = {
+  name: string;
+  value: string;
+  unit?: string;
+  status?: BiomarkerStatus;
+  note?: string;
+};
+
+export type ReportAnalysisResult = {
+  fileName?: string;
+  fileId?: string;
+  vectorStoreId?: string;
+  summary: string;
+  biomarkers: BiomarkerUpdate[];
+  organInsights: Array<{
+    organ: string;
+    score?: number;
+    risk?: string;
+    insight: string;
+  }>;
+  recommendations: string[];
 };
 
 export type Recommendation = {

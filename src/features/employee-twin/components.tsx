@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as d3 from "d3";
 import {
@@ -35,7 +35,7 @@ import {
 } from "recharts";
 import { biomarkers, employeeProfile, organScores, recommendations, risks, timeline, uploadSteps } from "./mock-data";
 import { useEmployeeTwinStore } from "./store";
-import { OrganId, OrganScore, UploadStep } from "./types";
+import { Biomarker, OrganId, OrganScore, ReportAnalysisResult, UploadStep } from "./types";
 
 const card = "rounded-lg border border-ink/10 bg-white shadow-hairline";
 const organUberonMap: Partial<Record<OrganId, string>> = {
@@ -433,7 +433,55 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
 
 export function HealthCopilotPanel() {
   const [message, setMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
+    {
+      role: "assistant",
+      content:
+        "Hi Rohit. Upload a PDF report and I can answer questions from it, explain markers, and prepare a doctor-ready summary."
+    }
+  ]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { latestReportAnalysis, vectorStoreId } = useEmployeeTwinStore();
   const prompts = ["Explain my HbA1c", "Why is my liver score low?", "Generate doctor summary", "Prepare diet plan"];
+
+  const sendMessage = async (nextMessage = message) => {
+    const trimmed = nextMessage.trim();
+    if (!trimmed || loading) return;
+
+    const nextMessages = [...chatMessages, { role: "user" as const, content: trimmed }];
+    setChatMessages(nextMessages);
+    setMessage("");
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/employee-twin/copilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: trimmed,
+          history: chatMessages,
+          vectorStoreId,
+          reportSummary: latestReportAnalysis?.summary
+        })
+      });
+      const payload = (await response.json()) as { answer?: string; error?: string };
+
+      if (!response.ok) {
+        throw new Error(payload.error ?? "Unable to reach the health copilot.");
+      }
+
+      setChatMessages((items) => [...items, { role: "assistant", content: payload.answer ?? "I could not generate an answer." }]);
+    } catch (sendError) {
+      const text = sendError instanceof Error ? sendError.message : "Unable to reach the health copilot.";
+      setError(text);
+      setChatMessages((items) => [...items, { role: "assistant", content: text }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <aside id="health-copilot" className={`${card} flex h-full min-h-[520px] flex-col p-5`}>
       <div className="flex items-center gap-3">
@@ -446,27 +494,48 @@ export function HealthCopilotPanel() {
         </div>
       </div>
       <div className="mt-5 flex-1 space-y-4 overflow-y-auto">
-        <div className="rounded-lg bg-mist p-4 text-sm leading-6 text-ink">
-          Hi Rohit. Your liver enzymes are slightly elevated. This can indicate fatty liver risk. Main reasons could be high processed food intake, low physical activity, and poor sleep quality.
-        </div>
-        <div className="ml-auto w-fit max-w-[84%] rounded-lg bg-ion p-4 text-sm leading-6 text-white">
-          Can you explain my liver report?
-        </div>
-        <div className="rounded-lg bg-mist p-4 text-sm leading-6 text-ink">
-          Recommendation: reduce sugar and refined carbs, walk 30 minutes daily, hydrate well, and improve sleep to 7-8 hours.
-        </div>
+        {latestReportAnalysis && (
+          <div className="rounded-lg border border-clinical/20 bg-clinical/5 p-4 text-sm leading-6 text-ink">
+            <p className="font-semibold text-clinical">Latest report loaded</p>
+            <p className="mt-1">{latestReportAnalysis.summary}</p>
+          </div>
+        )}
+        {chatMessages.map((item, index) => (
+          <div
+            key={`${item.role}-${index}`}
+            className={`rounded-lg p-4 text-sm leading-6 ${
+              item.role === "user" ? "ml-auto w-fit max-w-[84%] bg-ion text-white" : "bg-mist text-ink"
+            }`}
+          >
+            {item.content}
+          </div>
+        ))}
+        {loading && (
+          <div className="flex items-center gap-2 rounded-lg bg-mist p-4 text-sm font-semibold text-graphite">
+            <Loader2 className="animate-spin" size={16} /> Thinking from your report...
+          </div>
+        )}
       </div>
+      {error && <p className="mt-3 rounded-lg bg-pulse/10 p-3 text-xs font-semibold text-pulse">{error}</p>}
       <div className="mt-5 flex flex-wrap gap-2">
         {prompts.map((prompt) => (
-          <button key={prompt} onClick={() => setMessage(prompt)} className="rounded-full border border-ion/20 px-3 py-2 text-xs font-semibold text-ion">
+          <button key={prompt} onClick={() => sendMessage(prompt)} className="rounded-full border border-ion/20 px-3 py-2 text-xs font-semibold text-ion">
             {prompt}
           </button>
         ))}
       </div>
       <div className="mt-3 flex gap-2 rounded-lg border border-ink/10 bg-white p-2">
-        <input value={message} onChange={(event) => setMessage(event.target.value)} className="min-w-0 flex-1 px-2 text-sm text-ink" placeholder="Ask me anything about your health..." />
-        <button className="grid h-9 w-9 place-items-center rounded-lg bg-ion text-white" aria-label="Send message">
-          <Send size={17} />
+        <input
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") sendMessage();
+          }}
+          className="min-w-0 flex-1 px-2 text-sm text-ink"
+          placeholder="Ask me anything about your health..."
+        />
+        <button onClick={() => sendMessage()} disabled={loading} className="grid h-9 w-9 place-items-center rounded-lg bg-ion text-white disabled:opacity-50" aria-label="Send message">
+          {loading ? <Loader2 className="animate-spin" size={17} /> : <Send size={17} />}
         </button>
       </div>
     </aside>
@@ -571,6 +640,27 @@ function Metric({ label, value }: { label: string; value: string }) {
 }
 
 export function BiomarkerCharts() {
+  const biomarkerUpdates = useEmployeeTwinStore((state) => state.biomarkerUpdates);
+  const liveBiomarkers = useMemo(
+    () =>
+      biomarkers.map((biomarker): Biomarker => {
+        const update = biomarkerUpdates[biomarker.name.toLowerCase()];
+        if (!update) return biomarker;
+
+        const numericValue = Number.parseFloat(update.value);
+        return {
+          ...biomarker,
+          value: update.value,
+          unit: update.unit ?? biomarker.unit,
+          status: update.status ?? biomarker.status,
+          data: Number.isFinite(numericValue)
+            ? [...biomarker.data.slice(0, -1), { month: "Latest", value: numericValue }]
+            : biomarker.data
+        };
+      }),
+    [biomarkerUpdates]
+  );
+
   return (
     <section className={`${card} p-5`}>
       <div className="flex items-center justify-between">
@@ -578,7 +668,7 @@ export function BiomarkerCharts() {
         <a href="#biomarkers" className="text-sm font-semibold text-ion">View All</a>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {biomarkers.map((biomarker) => (
+        {liveBiomarkers.map((biomarker) => (
           <article key={biomarker.name} className="rounded-lg border border-ink/10 p-4">
             <p className="font-semibold text-ink">{biomarker.name}</p>
             <p className="mt-1 text-xl font-semibold text-ink">{biomarker.value} <span className="text-sm text-graphite">{biomarker.unit}</span></p>
@@ -620,19 +710,101 @@ export function RecommendationPanel() {
 
 export function UploadReportWidget() {
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [analysis, setAnalysis] = useState<ReportAnalysisResult | null>(null);
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const applyReportAnalysis = useEmployeeTwinStore((state) => state.applyReportAnalysis);
   const current = uploadSteps[activeStep];
-  const loading = activeStep > 0 && activeStep < uploadSteps.length - 1;
+  const loading = uploading || (activeStep > 0 && activeStep < uploadSteps.length - 1);
+
+  const uploadReport = async () => {
+    if (!selectedFile || uploading) {
+      fileInputRef.current?.click();
+      return;
+    }
+
+    setUploading(true);
+    setError("");
+    setAnalysis(null);
+    setActiveStep(1);
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    let stepTimer: number | undefined;
+    try {
+      stepTimer = window.setInterval(() => {
+        setActiveStep((step) => Math.min(step + 1, uploadSteps.length - 2));
+      }, 1400);
+
+      const response = await fetch("/api/employee-twin/upload-report", {
+        method: "POST",
+        body: formData
+      });
+
+      const payload = (await response.json()) as ReportAnalysisResult | { error?: string };
+      if (!response.ok) {
+        throw new Error("error" in payload ? payload.error : "Unable to analyze the report.");
+      }
+
+      const result = payload as ReportAnalysisResult;
+      applyReportAnalysis(result);
+      setAnalysis(result);
+      setActiveStep(uploadSteps.length - 1);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : "Unable to analyze the report.");
+      setActiveStep(0);
+    } finally {
+      if (stepTimer) {
+        window.clearInterval(stepTimer);
+      }
+      setUploading(false);
+    }
+  };
+
   return (
     <section id="upload-data" className={`${card} p-5`}>
       <h2 className="text-2xl font-semibold text-ink">Upload Reports</h2>
-      <p className="mt-2 text-sm text-graphite">Supported: PDF, JPG, PNG, lab reports, health checkups, prescriptions, ECG, MRI, CT scan.</p>
+      <p className="mt-2 text-sm text-graphite">Upload a PDF lab report for live OpenAI analysis, RAG indexing, and marker updates.</p>
       <div className="mt-5 rounded-lg border-2 border-dashed border-ion/30 bg-mist p-6 text-center">
         <UploadCloud className="mx-auto text-ion" size={42} />
-        <p className="mt-3 font-semibold text-ink">Drag and drop your files here</p>
-        <button onClick={() => setActiveStep((step) => (step + 1) % uploadSteps.length)} className="mt-4 inline-flex items-center gap-2 rounded-full bg-ion px-5 py-3 font-semibold text-white">
+        <p className="mt-3 font-semibold text-ink">{selectedFile ? selectedFile.name : "Choose a PDF report to analyze"}</p>
+        <p className="mt-1 text-xs text-graphite">PDFs are uploaded to OpenAI Files and indexed in a vector store for report-aware chat.</p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          onChange={(event) => {
+            setSelectedFile(event.target.files?.[0] ?? null);
+            setError("");
+          }}
+        />
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <button onClick={() => fileInputRef.current?.click()} className="inline-flex items-center gap-2 rounded-full border border-ion/20 bg-white px-5 py-3 font-semibold text-ion">
+            Select PDF
+          </button>
+          <button onClick={uploadReport} disabled={uploading} className="inline-flex items-center gap-2 rounded-full bg-ion px-5 py-3 font-semibold text-white disabled:opacity-50">
           {loading ? <Loader2 className="animate-spin" size={18} /> : <UploadCloud size={18} />} {current}
-        </button>
+          </button>
+        </div>
       </div>
+      {error && <p className="mt-3 rounded-lg bg-pulse/10 p-3 text-sm font-semibold text-pulse">{error}</p>}
+      {analysis && (
+        <div className="mt-4 rounded-lg border border-clinical/20 bg-clinical/5 p-4">
+          <p className="text-sm font-semibold text-clinical">AI analysis complete</p>
+          <p className="mt-2 text-sm leading-6 text-ink">{analysis.summary}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {analysis.biomarkers.slice(0, 6).map((biomarker) => (
+              <span key={biomarker.name} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-hairline">
+                {biomarker.name}: {biomarker.value}{biomarker.unit ? ` ${biomarker.unit}` : ""}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="mt-5 grid gap-2">
         {uploadSteps.map((step: UploadStep, index) => (
           <div key={step} className={`flex items-center gap-3 rounded-lg p-3 ${index <= activeStep ? "bg-mist" : "bg-white"}`}>
