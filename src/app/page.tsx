@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
-  AlertCircle,
   ArrowRight,
   Brain,
   Building2,
@@ -50,14 +49,9 @@ import {
   customerSegments,
   alertTypes,
   graphs,
-  integrationSources,
-  invitationChannels,
   marketplacePartners,
-  onboardingSteps,
   organs,
   priceTiers,
-  rolePermissions,
-  tenantStats,
   twinLifecycle,
   wellnessPrograms,
   uploadStates,
@@ -82,12 +76,12 @@ const populationData = [
   { name: "Obesity", value: 29, color: "#0f766e" }
 ];
 
-const inviteFunnelData = [
-  { stage: "Uploaded", users: 500 },
-  { stage: "Delivered", users: 472 },
-  { stage: "Opened", users: 331 },
-  { stage: "Registered", users: 244 },
-  { stage: "Reports", users: 176 }
+const preventionMomentumData = [
+  { stage: "Signals", score: 42 },
+  { stage: "Twin", score: 58 },
+  { stage: "Risk", score: 71 },
+  { stage: "Action", score: 83 },
+  { stage: "Progress", score: 91 }
 ];
 
 const trustBarItems = ["Corporates", "Schools", "Universities", "Hospitals", "Gyms", "Insurance Providers"];
@@ -153,7 +147,7 @@ const premiumTwinCards = [
   },
   {
     title: "Admin Intelligence",
-    description: "Tenant, cohort, billing, and access control in one place.",
+    description: "Clear population insights and program performance for leadership.",
     href: "/login",
     icon: Landmark,
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
@@ -723,76 +717,62 @@ function SaaSOperations() {
   return (
     <section id="saas-operations" className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase text-clinical">Multi-Tenant SaaS</p>
-            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Launch every organization as its own secure tenant.</h2>
-            <p className="mt-5 text-lg leading-8 text-graphite">
-              Corporate, school, university, gym, hospital, and insurance tenants get isolated users, admins, reports,
-              AI models, dashboards, policies, billing, and audit trails.
+            <p className="text-sm font-semibold uppercase text-clinical">Why NeuroMirror</p>
+            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">See health change before it becomes a crisis.</h2>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-graphite">
+              NeuroMirror turns everyday health signals into a living 3D twin, helping people and organizations understand risk, act earlier, and measure improvement.
             </p>
-            <div className="mt-8 rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-              <div className="flex items-center justify-between gap-4">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {[
+                ["Predict earlier", "Spot risk movement across heart, liver, sleep, stress, and metabolism."],
+                ["Personalize action", "Translate reports and habits into clear next steps people can follow."],
+                ["Show progress", "Visualize how sleep, exercise, weight, and recovery shift the twin over time."],
+                ["Scale prevention", "Help teams, schools, gyms, and hospitals move from reactive care to guided prevention."]
+              ].map(([title, body]) => (
+                <article key={title} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
+                  <Check size={18} className="text-clinical" />
+                  <h3 className="mt-3 font-semibold text-ink">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-lg border border-ink/10 bg-ink p-5 text-white shadow-glass">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(47,111,237,0.28),transparent_32rem)]" />
+            <div className="relative">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold text-clinical">Generated tenant URL</p>
-                  <p className="mt-1 text-2xl font-semibold text-ink">acme-health.neuromirror.ai</p>
+                  <p className="text-sm font-semibold uppercase text-white/60">3D twin simulation</p>
+                  <h3 className="mt-2 text-2xl font-semibold">Model the next best move.</h3>
                 </div>
-                <span className="rounded-full bg-clinical/10 px-3 py-1 text-sm font-semibold text-clinical">Ready</span>
+                <span className="rounded-full bg-clinical px-3 py-1 text-sm font-semibold text-white">Live preview</span>
+              </div>
+              <div className="mt-5 h-[430px] overflow-hidden rounded-lg border border-white/10 bg-white/10">
+                <HeroDigitalHumanCanvas />
               </div>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                {["No cross-tenant data", "Dedicated policies", "Tenant AI controls", "Private dashboards"].map((item) => (
-                  <p key={item} className="flex items-center gap-2 rounded-lg bg-mist px-3 py-2 text-sm font-semibold text-ink">
-                    <Check size={15} className="text-clinical" /> {item}
-                  </p>
+                {organs.slice(0, 4).map((organ) => (
+                  <div key={organ.id} className="rounded-lg border border-white/10 bg-white/10 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold">{organ.label}</span>
+                      <span className="rounded-full bg-white/10 px-2 py-1 text-xs font-semibold">{organ.score}/100</span>
+                    </div>
+                    <p className="mt-1 text-xs text-white/60">{organ.risk} risk - {organ.trend} trend</p>
+                  </div>
                 ))}
               </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3">
-            {onboardingSteps.map((step, index) => (
-              <article key={step.title} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
-                <div className="flex gap-4">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink text-sm font-semibold text-white">
-                    {index + 1}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-ink">{step.title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-graphite">{step.detail}</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {step.fields.map((field) => (
-                        <span key={field} className="rounded-full bg-mist px-3 py-1 text-xs font-semibold text-ink">
-                          {field}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-semibold uppercase text-clinical">Organization Admin Dashboard</p>
-              <h3 className="mt-2 text-3xl font-semibold text-ink">Tenant command center after purchase.</h3>
-            </div>
-            <button className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-3 font-semibold text-white">
-              Launch Tenant <RocketIcon />
-            </button>
-          </div>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {tenantStats.map((stat) => (
-              <div key={stat.label} className="rounded-lg bg-mist p-4">
-                <p className="text-xs font-semibold uppercase text-graphite">{stat.label}</p>
-                <div className="mt-2 flex items-end justify-between gap-3">
-                  <p className="text-3xl font-semibold text-ink">{stat.value}</p>
-                  <p className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-clinical">{stat.delta}</p>
+              <div className="mt-5 rounded-lg bg-white p-4 text-ink">
+                <p className="text-sm font-semibold text-clinical">What changes when action improves?</p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                  {["Heart risk 22% -> 11%", "Sleep score +12", "Biological age -5y"].map((item) => (
+                    <p key={item} className="rounded-lg bg-mist px-3 py-2 text-sm font-semibold">{item}</p>
+                  ))}
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -800,67 +780,57 @@ function SaaSOperations() {
   );
 }
 
-function RocketIcon() {
-  return <ArrowRight size={17} />;
-}
-
-function InvitationsAndAccess() {
+function HealthJourney() {
   return (
-    <section id="tenant-management" className="border-y border-ink/10 bg-mist py-20">
+    <section id="member-journey" className="border-y border-ink/10 bg-mist py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <p className="text-sm font-semibold uppercase text-clinical">Invitations And Access</p>
-            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Import 500 users and track every invite.</h2>
+            <p className="text-sm font-semibold uppercase text-clinical">Health Journey</p>
+            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">From first report to a living prevention plan.</h2>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-graphite">
+              NeuroMirror helps people understand what their body is telling them, visualize risk in 3D, and follow the next action that can move their scores.
+            </p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {invitationChannels.map((channel) => {
-                const Icon = channel.icon;
-                return (
-                  <article key={channel.name} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="grid h-10 w-10 place-items-center rounded-lg bg-clinical/10 text-clinical">
-                        <Icon size={19} />
-                      </div>
-                      <span className="rounded-full bg-mist px-3 py-1 text-xs font-semibold text-graphite">{channel.status}</span>
-                    </div>
-                    <h3 className="mt-4 font-semibold text-ink">{channel.name}</h3>
-                  </article>
-                );
-              })}
-            </div>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {integrationSources.map((source) => (
-                <span key={source} className="rounded-full bg-white px-3 py-2 text-sm font-semibold text-ink shadow-hairline">
-                  {source}
-                </span>
+              {[
+                ["Connect signals", "Reports, wearables, lifestyle, symptoms, and goals become one health picture."],
+                ["Build the twin", "Organ scores, trends, and risk patterns appear in a visual model people can understand."],
+                ["Simulate change", "Sleep, weight, exercise, stress, and recovery choices show projected impact."],
+                ["Guide action", "The platform turns complex health data into simple next steps and progress tracking."]
+              ].map(([title, body], index) => (
+                <article key={title} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-ink text-sm font-semibold text-white">{index + 1}</span>
+                  <h3 className="mt-4 font-semibold text-ink">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{body}</p>
+                </article>
               ))}
             </div>
           </div>
           <div className="rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-semibold text-ink">Invitation funnel</h3>
-              <span className="rounded-full bg-clinical/10 px-3 py-1 text-xs font-semibold text-clinical">Live campaign</span>
+              <h3 className="font-semibold text-ink">Prevention momentum</h3>
+              <span className="rounded-full bg-clinical/10 px-3 py-1 text-xs font-semibold text-clinical">Improving</span>
             </div>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={inviteFunnelData}>
+                <BarChart data={preventionMomentumData}>
                   <CartesianGrid stroke="#e5ecea" vertical={false} />
                   <XAxis dataKey="stage" stroke="#647176" />
                   <YAxis stroke="#647176" />
                   <Tooltip />
-                  <Bar dataKey="users" fill="#0f766e" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="score" fill="#0f766e" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
             <div className="mt-5 grid gap-3">
               {[
-                "Create account",
-                "Verify mobile and email",
-                "Accept consent",
-                "Health questionnaire",
-                "Upload reports",
-                "Connect wearables",
-                "Launch dashboard"
+                "Reports understood",
+                "Wearable trends connected",
+                "Organ scores generated",
+                "Risks explained in plain language",
+                "Lifestyle simulation reviewed",
+                "Next action selected",
+                "Progress tracked over time"
               ].map((step, index) => (
                 <div key={step} className="flex items-center gap-3 rounded-lg bg-mist p-3">
                   <span className="grid h-7 w-7 place-items-center rounded-full bg-white text-xs font-semibold text-ink">{index + 1}</span>
@@ -868,32 +838,6 @@ function InvitationsAndAccess() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="mt-10 rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-semibold uppercase text-clinical">Role Based Access Control</p>
-              <h3 className="mt-2 text-3xl font-semibold text-ink">Permissions by role and purpose.</h3>
-            </div>
-            <p className="max-w-xl text-sm leading-6 text-graphite">
-              HR, teachers, insurers, and admins never receive personal reports unless policy, role, and consent allow it.
-            </p>
-          </div>
-          <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {rolePermissions.map((role) => (
-              <article key={role.role} className="rounded-lg bg-mist p-4">
-                <h4 className="font-semibold text-ink">{role.role}</h4>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {role.permissions.map((permission) => (
-                    <span key={permission} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-graphite">
-                      {permission}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            ))}
           </div>
         </div>
       </div>
@@ -1255,9 +1199,9 @@ function DemoForm() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
         <div>
           <p className="text-sm font-semibold uppercase text-white/60">Book Demo</p>
-          <h2 className="mt-3 text-4xl font-semibold sm:text-5xl">Deploy the health intelligence layer your organization can trust.</h2>
+          <h2 className="mt-3 text-4xl font-semibold sm:text-5xl">Bring preventive health intelligence to every person you serve.</h2>
           <p className="mt-5 text-lg leading-8 text-white/70">
-            The next implementation step is splitting this prototype into dedicated routes, NestJS services, database migrations, and Azure infrastructure modules.
+            See how NeuroMirror can help your organization improve engagement, predict risk earlier, and guide people toward measurable health progress.
           </p>
         </div>
         <form className="rounded-lg bg-white p-5 text-ink shadow-glass">
@@ -1276,8 +1220,8 @@ function DemoForm() {
           <button type="button" className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-clinical px-5 py-3 font-semibold text-white">
             Request Enterprise Demo <ArrowRight size={18} />
           </button>
-          <p className="mt-3 flex items-center gap-2 text-xs text-graphite">
-            <AlertCircle size={14} /> Demo submissions are mocked in this prototype.
+          <p className="mt-3 text-xs text-graphite">
+            Our team will tailor the walkthrough to your audience, workflows, and prevention goals.
           </p>
         </form>
       </div>
@@ -1296,7 +1240,7 @@ export default function Home() {
         <TrustLogoMarquee />
         <Platform />
         <SaaSOperations />
-        <InvitationsAndAccess />
+        <HealthJourney />
         <MarketplaceProgramsAndAlerts />
         <Dashboards />
         <UploadFlow />
