@@ -58,6 +58,13 @@ select {
     0 0 0 8px rgba(15, 118, 110, 0.06);
 }
 
+.product-intro-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
 .logo-marquee {
   width: max-content;
   animation: logo-marquee 34s linear infinite;

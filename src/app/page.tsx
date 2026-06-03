@@ -6,20 +6,24 @@ import {
   AlertCircle,
   ArrowRight,
   Brain,
+  Building2,
   Check,
   ChevronRight,
-  Cloud,
-  Database,
-  FileText,
+  Dumbbell,
+  GraduationCap,
   HeartPulse,
+  Hospital,
+  Landmark,
   LineChart,
   Loader2,
-  LockKeyhole,
   MessageSquareText,
   Play,
   RefreshCw,
+  School,
   ShieldCheck,
+  Sparkles,
   UploadCloud,
+  Users,
   X
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -43,18 +47,14 @@ import {
 import * as THREE from "three";
 import {
   agents,
-  apiSurface,
-  architectureCards,
   customerSegments,
   alertTypes,
   graphs,
   integrationSources,
   invitationChannels,
   marketplacePartners,
-  navItems,
   onboardingSteps,
   organs,
-  pages,
   priceTiers,
   rolePermissions,
   tenantStats,
@@ -90,16 +90,84 @@ const inviteFunnelData = [
   { stage: "Reports", users: 176 }
 ];
 
-const trustedLogos = [
-  { name: "Apple", slug: "apple" },
-  { name: "Tesla", slug: "tesla" },
-  { name: "OpenAI", slug: "openai" },
-  { name: "Stripe", slug: "stripe" },
-  { name: "Vercel", slug: "vercel" },
-  { name: "Microsoft", slug: "microsoft" },
-  { name: "Garmin", slug: "garmin" },
-  { name: "Fitbit", slug: "fitbit" },
-  { name: "GitHub", slug: "github" }
+const trustBarItems = ["Corporates", "Schools", "Universities", "Hospitals", "Gyms", "Insurance Providers"];
+
+const primaryNav = [
+  { label: "Platform", href: "#platform" },
+  { label: "Resources", href: "#ai-copilot" },
+  { label: "Company", href: "#book-demo" },
+  { label: "Pricing", href: "#pricing" }
+];
+
+const solutionNav = [
+  { label: "Corporate Twin", href: "/employee-health-dashboard", icon: Building2 },
+  { label: "School Twin", href: "/kids-dashboard", icon: School },
+  { label: "Gym Twin", href: "/gym-twin-dashboard", icon: Dumbbell },
+  { label: "Hospital Twin", href: "#solutions", icon: Hospital },
+  { label: "University Twin", href: "#solutions", icon: GraduationCap },
+  { label: "Family Twin", href: "#digital-twin", icon: Users }
+];
+
+const dashboardLinks = [
+  { label: "Admin Dashboard", href: "/login", icon: ShieldCheck, tone: "text-ink" },
+  { label: "Employee Dashboard", href: "/employee-health-dashboard", icon: Building2, tone: "text-clinical" },
+  { label: "Kids Dashboard", href: "/kids-dashboard", icon: School, tone: "text-ion" },
+  { label: "Gym Twin", href: "/gym-twin-dashboard", icon: Dumbbell, tone: "text-[#5b35f5]" }
+];
+
+const premiumTwinCards = [
+  {
+    title: "Corporate Twin",
+    description: "Population health intelligence for resilient teams.",
+    href: "/employee-health-dashboard",
+    icon: Building2,
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    title: "School Twin",
+    description: "Growth, fitness, nutrition, and wellbeing for students.",
+    href: "/kids-dashboard",
+    icon: School,
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    title: "Gym Twin",
+    description: "Performance, recovery, and body composition intelligence.",
+    href: "/gym-twin-dashboard",
+    icon: Dumbbell,
+    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    title: "Hospital Twin",
+    description: "Clinical timelines and risk context for care teams.",
+    href: "#solutions",
+    icon: Hospital,
+    image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    title: "AI Copilot",
+    description: "A conversational health interface with guardrails.",
+    href: "#ai-copilot",
+    icon: Sparkles,
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    title: "Admin Intelligence",
+    description: "Tenant, cohort, billing, and access control in one place.",
+    href: "/login",
+    icon: Landmark,
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
+  }
+];
+
+const mappedPages = [
+  { label: "Admin Dashboard", href: "/login", icon: ShieldCheck },
+  { label: "Employee Health", href: "/employee-health-dashboard", icon: Building2 },
+  { label: "Kids Dashboard", href: "/kids-dashboard", icon: School },
+  { label: "Gym Twin", href: "/gym-twin-dashboard", icon: Dumbbell },
+  { label: "Book Demo", href: "#book-demo", icon: MessageSquareText },
+  { label: "AI Copilot", href: "#ai-copilot", icon: Sparkles },
+  { label: "Digital Twin", href: "#digital-twin", icon: HeartPulse }
 ];
 
 function HeroOrganOrb({
@@ -185,30 +253,26 @@ function HeroDigitalHumanCanvas() {
 }
 
 function TrustLogoMarquee() {
-  const logoLoop = [...trustedLogos, ...trustedLogos];
-
   return (
-    <section className="border-y border-ink/10 bg-white/80 py-7">
+    <section className="border-y border-ink/10 bg-white/90 py-7">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center">
           <p className="w-full text-sm font-semibold uppercase tracking-[0.18em] text-graphite md:w-64">
-            Inspired by teams building the future
+            Trusted by modern health ecosystems
           </p>
           <div className="relative flex-1 overflow-hidden">
             <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white to-transparent" />
             <div className="logo-marquee flex items-center gap-4">
-              {logoLoop.map((logo, index) => (
+              {[...trustBarItems, ...trustBarItems].map((name, index) => (
                 <div
-                  key={`${logo.slug}-${index}`}
-                  className="flex h-14 min-w-40 items-center justify-center gap-3 rounded-lg border border-ink/10 bg-white px-5 shadow-hairline"
+                  key={`${name}-${index}`}
+                  className="flex h-14 min-w-52 items-center justify-center gap-3 rounded-lg border border-ink/10 bg-white px-5 shadow-hairline"
                 >
-                  <img
-                    src={`https://cdn.simpleicons.org/${logo.slug}/172126`}
-                    alt={`${logo.name} logo`}
-                    className="h-5 w-5 object-contain"
-                  />
-                  <span className="text-sm font-semibold text-ink">{logo.name}</span>
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-clinical/10 text-clinical">
+                    <Check size={16} />
+                  </span>
+                  <span className="text-sm font-semibold text-ink">{name}</span>
                 </div>
               ))}
             </div>
@@ -376,7 +440,7 @@ function ThreeHumanTwin() {
 
 function Header() {
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-ink/10 bg-white/82 backdrop-blur-xl">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-ink/10 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <a href="#home" className="flex items-center gap-3 font-semibold text-ink" aria-label="Neuromirror home">
           <span className="grid h-9 w-9 place-items-center rounded-full bg-ink text-white">
@@ -385,13 +449,40 @@ function Header() {
           <span>Neuromirror</span>
         </a>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
-            {navItems.slice(1, 7).map((item) => (
+          {primaryNav.slice(0, 1).map((item) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+              key={item.label}
+              href={item.href}
               className="rounded-full px-4 py-2 text-sm font-medium text-graphite transition hover:bg-ink/5 hover:text-ink"
             >
-              {item}
+              {item.label}
+            </a>
+          ))}
+          <div className="group relative">
+            <button className="rounded-full px-4 py-2 text-sm font-medium text-graphite transition hover:bg-ink/5 hover:text-ink">
+              Solutions
+            </button>
+            <div className="invisible absolute left-0 top-full w-72 translate-y-2 rounded-lg border border-ink/10 bg-white p-2 opacity-0 shadow-glass transition group-hover:visible group-hover:translate-y-1 group-hover:opacity-100">
+              {solutionNav.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <a key={item.label} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-ink hover:bg-mist">
+                    <span className="grid h-9 w-9 place-items-center rounded-lg bg-clinical/10 text-clinical">
+                      <Icon size={18} />
+                    </span>
+                    {item.label}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+          {primaryNav.slice(1).map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="rounded-full px-4 py-2 text-sm font-medium text-graphite transition hover:bg-ink/5 hover:text-ink"
+            >
+              {item.label}
             </a>
           ))}
         </nav>
@@ -401,30 +492,22 @@ function Header() {
         >
           Book Demo <ArrowRight size={16} />
         </a>
-        <a
-          href="/login"
-          className="hidden items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline transition hover:border-clinical/40 md:inline-flex"
-        >
-          Admin Dashboard
-        </a>
-        <a
-          href="/employee-health-dashboard"
-          className="hidden items-center gap-2 rounded-full bg-clinical px-4 py-2 text-sm font-semibold text-white shadow-hairline transition hover:bg-ink xl:inline-flex"
-        >
-          Employee Health
-        </a>
-        <a
-          href="/kids-dashboard"
-          className="hidden items-center gap-2 rounded-full bg-ion px-4 py-2 text-sm font-semibold text-white shadow-hairline transition hover:bg-ink xl:inline-flex"
-        >
-          Kids Dashboard
-        </a>
-        <a
-          href="/gym-twin-dashboard"
-          className="hidden items-center gap-2 rounded-full bg-[#5b35f5] px-4 py-2 text-sm font-semibold text-white shadow-hairline transition hover:bg-ink xl:inline-flex"
-        >
-          Gym Twin
-        </a>
+        <div className="group relative hidden md:block">
+          <button className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline transition hover:border-clinical/40">
+            Dashboard <ChevronRight size={15} />
+          </button>
+          <div className="invisible absolute right-0 top-full w-72 translate-y-2 rounded-lg border border-ink/10 bg-white p-2 opacity-0 shadow-glass transition group-hover:visible group-hover:translate-y-1 group-hover:opacity-100">
+            {dashboardLinks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a key={item.label} href={item.href} className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-ink hover:bg-mist">
+                  <Icon size={18} className={item.tone} />
+                  {item.label}
+                </a>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </header>
   );
@@ -447,29 +530,48 @@ function Hero() {
             Your Digital Twin For Life
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-graphite sm:text-xl">
-            One intelligent platform that understands your health, fitness, growth, wellbeing, and future risks.
-            Continuously learning. Continuously improving. Powered by AI to improve the health of every person on the
-            globe through preventive health.
+            One intelligent platform that continuously learns, predicts, and improves human health, fitness, growth, and wellbeing.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="/employee-health-dashboard" className="inline-flex items-center gap-2 rounded-full bg-clinical px-5 py-3 font-semibold text-white shadow-glass">
               Experience My Twin <ChevronRight size={18} />
             </a>
-            <a href="#ai-copilot" className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-3 font-semibold text-ink shadow-hairline">
+            <a href="#product-intro" className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-3 font-semibold text-ink shadow-hairline">
               Watch Demo <Play size={18} />
             </a>
             <a href="#book-demo" className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-5 py-3 font-semibold text-ink shadow-hairline">
-              Book Enterprise Demo <MessageSquareText size={18} />
+              Book Demo <MessageSquareText size={18} />
             </a>
-            <a href="#platform" className="inline-flex items-center gap-2 rounded-full border border-clinical/20 bg-white px-5 py-3 font-semibold text-clinical shadow-hairline">
-              Explore Platform <HeartPulse size={18} />
-            </a>
-            <a href="/kids-dashboard" className="inline-flex items-center gap-2 rounded-full border border-ion/20 bg-white px-5 py-3 font-semibold text-ion shadow-hairline">
-              Kids Digital Twin <Brain size={18} />
-            </a>
-            <a href="/gym-twin-dashboard" className="inline-flex items-center gap-2 rounded-full border border-[#5b35f5]/20 bg-white px-5 py-3 font-semibold text-[#5b35f5] shadow-hairline">
-              Gym Digital Twin <Activity size={18} />
-            </a>
+          </div>
+          <div className="mt-6 grid gap-2 sm:grid-cols-2">
+            {dashboardLinks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-ink/10 bg-white/75 px-4 py-3 text-sm font-semibold text-ink shadow-hairline backdrop-blur transition hover:-translate-y-0.5 hover:border-clinical/40 hover:bg-white"
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <Icon size={18} className={item.tone} />
+                    {item.label}
+                  </span>
+                  <ArrowRight size={15} className="text-graphite transition group-hover:translate-x-0.5 group-hover:text-clinical" />
+                </a>
+              );
+            })}
+          </div>
+          <div id="product-intro" className="mt-8 overflow-hidden rounded-lg border border-ink/10 bg-ink shadow-glass">
+            <video
+              className="product-intro-video"
+              src="/videos/product-intro.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Neuromirror product intro video"
+            />
           </div>
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
             {["HIPAA-ready controls", "Cohort privacy", "Agentic RAG"].map((item) => (
@@ -510,16 +612,22 @@ function Hero() {
                   <span className="font-semibold text-clinical">36 &rarr; 31</span>
                 </div>
               </div>
+              <button className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white">
+                Run Simulation <Sparkles size={15} />
+              </button>
             </div>
             <div className="absolute bottom-4 left-4 right-4 grid gap-3 rounded-lg border border-ink/10 bg-white/90 p-4 shadow-glass backdrop-blur-xl md:grid-cols-[0.8fr_1.2fr]">
               <div>
-                <p className="text-sm text-graphite">Selected organ</p>
+                <p className="text-sm text-graphite">Health score</p>
                 <div className="mt-1 flex items-center gap-3">
                   <span className="h-3 w-3 rounded-full" style={{ backgroundColor: selected.color }} />
                   <p className="text-2xl font-semibold text-ink">{selected.label}</p>
                   <p className="rounded-full bg-ink px-2 py-1 text-xs font-semibold text-white">{selected.score}</p>
                 </div>
                 <p className="mt-2 text-sm text-graphite">{selected.insight}</p>
+                <p className="mt-3 w-fit rounded-full bg-clinical/10 px-3 py-1 text-xs font-semibold text-clinical">
+                  Trend +8 points this month
+                </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 {[
@@ -572,35 +680,37 @@ function Platform() {
   return (
     <section id="platform" className="border-y border-ink/10 bg-mist py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase text-clinical">Complete SaaS Platform</p>
-          <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">One twin engine, eight markets.</h2>
-          <p className="mt-5 text-lg leading-8 text-graphite">
-            Neuromirror unifies reports, wearables, imaging, lifestyle, and enterprise workflows into a privacy-first intelligence layer.
-          </p>
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase text-clinical">Digital Twin Platform</p>
+            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Purpose-built twins for every health ecosystem.</h2>
+          </div>
+          <a href="#book-demo" className="inline-flex w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 font-semibold text-white shadow-hairline">
+            Book Demo <ArrowRight size={17} />
+          </a>
         </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {customerSegments.map((segment) => {
-            const Icon = segment.icon;
+        <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {premiumTwinCards.map((card) => {
+            const Icon = card.icon;
             return (
-              <article key={segment.name} className="rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="grid h-10 w-10 place-items-center rounded-lg bg-clinical/10 text-clinical">
-                    <Icon size={20} />
+              <a key={card.title} href={card.href} className="group overflow-hidden rounded-lg border border-ink/10 bg-white shadow-hairline transition hover:-translate-y-1 hover:border-clinical/40 hover:shadow-glass">
+                <div className="relative h-56 overflow-hidden bg-ink">
+                  <img src={card.image} alt="" loading="lazy" className="h-full w-full object-cover opacity-90 transition duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                  <div className="absolute bottom-4 left-4 grid h-11 w-11 place-items-center rounded-lg bg-white text-clinical shadow-hairline">
+                    <Icon size={22} />
                   </div>
-                  <LockKeyhole size={17} className="text-graphite" />
                 </div>
-                <h3 className="mt-5 text-xl font-semibold text-ink">{segment.name}</h3>
-                <p className="mt-2 min-h-16 text-sm leading-6 text-graphite">{segment.headline}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {segment.metrics.map((metric) => (
-                    <span key={metric} className="rounded-full bg-mist px-3 py-1 text-xs font-semibold text-ink">
-                      {metric}
-                    </span>
-                  ))}
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-ink">{card.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-graphite">{card.description}</p>
+                    </div>
+                    <ArrowRight size={18} className="mt-1 shrink-0 text-graphite transition group-hover:translate-x-1 group-hover:text-clinical" />
+                  </div>
                 </div>
-                <p className="mt-4 text-xs font-semibold text-clinical">{segment.privacy}</p>
-              </article>
+              </a>
             );
           })}
         </div>
@@ -859,7 +969,7 @@ function MarketplaceProgramsAndAlerts() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {twinLifecycle.map((step, index) => (
                 <div key={step} className="rounded-lg border border-white/10 bg-white/10 p-4">
-                <p className="text-sm text-white/55">Step {index + 1}</p>
+                <p className="text-sm text-white/60">Step {index + 1}</p>
                 <p className="mt-1 font-semibold">{step}</p>
               </div>
             ))}
@@ -980,26 +1090,24 @@ function UploadFlow() {
   const isSuccess = current === "Success";
 
   return (
-    <section id="digital-twin" className="border-y border-ink/10 bg-mist py-20">
+    <section id="digital-twin" className="border-y border-white/10 bg-ink py-20 text-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
         <div>
-          <p className="text-sm font-semibold uppercase text-clinical">Health Digital Twin</p>
-          <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Upload once. Recalculate the entire twin.</h2>
-          <p className="mt-5 text-lg leading-8 text-graphite">
-            Annual checkups, CBC, HbA1c, lipid profile, LFT, KFT, vitamin D, B12, thyroid, CRP, insulin, uric acid, ECG,
-            echo, stress tests, MRI, CT, ultrasound, medication history, allergies, vaccination, lifestyle, wearables,
-            and family history all become longitudinal context.
+          <p className="text-sm font-semibold uppercase text-clinical">Interactive Digital Twin</p>
+          <h2 className="mt-3 text-4xl font-semibold sm:text-5xl">Upload once. Watch the twin recalculate.</h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/70">
+            Reports, wearables, lifestyle, and history become a living model that updates risk, organ scores, and next-best actions.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {workflow.map((item) => (
-              <div key={item.label} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
-                <p className="font-semibold text-ink">{item.label}</p>
-                <p className="mt-1 text-sm text-graphite">{item.description}</p>
+              <div key={item.label} className="rounded-lg border border-white/10 bg-white/10 p-4 shadow-hairline">
+                <p className="font-semibold text-white">{item.label}</p>
+                <p className="mt-1 text-sm text-white/60">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="glass rounded-lg p-5">
+        <div className="rounded-lg border border-white/10 bg-white/10 p-5 shadow-glass backdrop-blur-xl">
           <div className="rounded-lg border-2 border-dashed border-clinical/30 bg-white p-6 text-center">
             <UploadCloud className="mx-auto text-clinical" size={36} />
             <h3 className="mt-4 text-2xl font-semibold text-ink">Annual Health Checkup.pdf</h3>
@@ -1040,22 +1148,22 @@ function CopilotAndAgents() {
         <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
           <div>
             <p className="text-sm font-semibold uppercase text-clinical">AI Health Copilot</p>
-            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">A ChatGPT-level health interface with clinical guardrails.</h2>
-            <div className="mt-8 rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
+            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Ask your body what changed, and why.</h2>
+            <div className="mt-8 rounded-lg border border-ink/10 bg-ink p-4 text-white shadow-glass">
               {[
-                ["You", "Compare my March and May lipid reports and explain the risk trend."],
-                ["Neuromirror", "LDL fell from 142 to 118, triglycerides improved, and ApoB remains the next high-value marker to confirm residual risk."],
-                ["You", "Generate a doctor summary for my appointment."],
-                ["Neuromirror", "Prepared: timeline, abnormal labs, medications, family history, questions, and source citations for review."]
+                ["You", "Why is my liver score low?"],
+                ["Neuromirror", "Your liver score is being pulled down by ALT drift, triglycerides, sleep debt, and recent weight trend. The model predicts the fastest improvement from lower alcohol intake, 7.5h sleep consistency, and a 6-week strength plus walking plan."],
+                ["You", "Can I share this with my doctor?"],
+                ["Neuromirror", "Yes. I prepared a short clinical summary with timeline, abnormal labs, lifestyle signals, and the questions worth asking next."]
               ].map(([role, text]) => (
-                <div key={text} className={`mb-3 rounded-lg p-4 ${role === "You" ? "bg-mist" : "bg-clinical/8 border border-clinical/20"}`}>
-                  <p className="text-xs font-semibold uppercase text-graphite">{role}</p>
-                  <p className="mt-1 text-ink">{text}</p>
+                <div key={text} className={`mb-3 rounded-lg p-4 ${role === "You" ? "ml-auto max-w-[84%] bg-white/10" : "mr-auto max-w-[92%] border border-clinical/30 bg-clinical/20"}`}>
+                  <p className="text-xs font-semibold uppercase text-white/50">{role}</p>
+                  <p className="mt-1 text-white/90">{text}</p>
                 </div>
               ))}
-              <div className="flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-3 text-graphite">
+              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white px-4 py-3 text-graphite">
                 <MessageSquareText size={18} />
-                Ask about reports, risks, medication, nutrition, exercise, prevention...
+                Ask about reports, risk, medication, nutrition, exercise, prevention...
               </div>
             </div>
           </div>
@@ -1076,75 +1184,29 @@ function CopilotAndAgents() {
   );
 }
 
-function Architecture() {
-  return (
-    <section id="security" className="border-y border-ink/10 bg-mist py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
-          <div>
-            <p className="text-sm font-semibold uppercase text-clinical">Enterprise Architecture</p>
-            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Built for medical trust and SaaS scale.</h2>
-            <div className="mt-8 grid gap-3">
-              {["Next.js 15", "NestJS", "PostgreSQL", "Redis", "OpenAI GPT models", "LangGraph", "LangChain", "FAISS", "Azure", "Kubernetes", "Docker", "Vercel"].map((tech) => (
-                <span key={tech} className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink shadow-hairline">
-                  <Check size={15} className="text-clinical" /> {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {architectureCards.map((card) => {
-              const Icon = card.icon;
-              return (
-                <article key={card.title} className="rounded-lg border border-ink/10 bg-white p-5 shadow-hairline">
-                  <Icon className="text-clinical" size={24} />
-                  <h3 className="mt-4 font-semibold text-ink">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-graphite">{card.body}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-        <div className="mt-10 grid gap-4 lg:grid-cols-3">
-          <div className="rounded-lg bg-ink p-5 text-white">
-            <Database className="text-white/80" size={22} />
-            <h3 className="mt-4 font-semibold">Database Tables</h3>
-            <p className="mt-2 text-sm text-white/70">tenants, users, members, consent_grants, reports, biomarkers, organ_scores, simulations, cohorts, messages, agent_runs, audit_events.</p>
-          </div>
-          <div className="rounded-lg bg-white p-5 shadow-hairline">
-            <Cloud className="text-clinical" size={22} />
-            <h3 className="mt-4 font-semibold text-ink">Deployment</h3>
-            <p className="mt-2 text-sm text-graphite">Vercel frontend, Azure AKS services, Azure Database for PostgreSQL, Azure Cache for Redis, Blob Storage, Key Vault, Monitor.</p>
-          </div>
-          <div className="rounded-lg bg-white p-5 shadow-hairline">
-            <FileText className="text-clinical" size={22} />
-            <h3 className="mt-4 font-semibold text-ink">APIs</h3>
-            <div className="mt-3 space-y-2">
-              {apiSurface.slice(0, 5).map((api) => (
-                <p key={api} className="rounded bg-mist px-3 py-2 font-mono text-xs text-ink">{api}</p>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function PricingAndPages() {
   return (
     <section id="pricing" className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
-            <p className="text-sm font-semibold uppercase text-clinical">Information Architecture</p>
-            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Every page and module mapped.</h2>
-            <div className="mt-8 grid grid-cols-2 gap-2">
-              {pages.map((page) => (
-                <a key={page} href="#book-demo" className="rounded-lg border border-ink/10 bg-white p-3 text-sm font-semibold text-ink shadow-hairline hover:border-clinical/40">
-                  {page}
-                </a>
-              ))}
+            <p className="text-sm font-semibold uppercase text-clinical">Mapped Experience</p>
+            <h2 className="mt-3 text-4xl font-semibold text-ink sm:text-5xl">Every live page, one clear doorway.</h2>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {mappedPages.map((page) => {
+                const Icon = page.icon;
+                return (
+                  <a key={page.label} href={page.href} className="group flex items-center justify-between gap-3 rounded-lg border border-ink/10 bg-white p-4 text-sm font-semibold text-ink shadow-hairline transition hover:-translate-y-0.5 hover:border-clinical/40">
+                    <span className="inline-flex items-center gap-3">
+                      <span className="grid h-9 w-9 place-items-center rounded-lg bg-clinical/10 text-clinical">
+                        <Icon size={18} />
+                      </span>
+                      {page.label}
+                    </span>
+                    <ArrowRight size={16} className="text-graphite transition group-hover:translate-x-1 group-hover:text-clinical" />
+                  </a>
+                );
+              })}
             </div>
           </div>
           <div>
@@ -1239,7 +1301,6 @@ export default function Home() {
         <Dashboards />
         <UploadFlow />
         <CopilotAndAgents />
-        <Architecture />
         <PricingAndPages />
         <DemoForm />
       </main>
