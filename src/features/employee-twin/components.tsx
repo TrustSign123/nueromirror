@@ -9,13 +9,20 @@ import {
   Calendar,
   Check,
   ChevronRight,
+  Dna,
   FileText,
+  FlaskConical,
+  Gauge,
   HeartHandshake,
   HeartPulse,
   Loader2,
   MessageSquareText,
   Moon,
+  Pill,
   Send,
+  ShieldCheck,
+  Sparkles,
+  Utensils,
   UploadCloud,
   Watch,
   X
@@ -152,9 +159,22 @@ export function EmployeeSidebar() {
     { label: "Upload Data", href: "#upload-data", icon: UploadCloud },
     { label: "Wearables", href: "#wearables", icon: Watch },
     { label: "Care Hub", href: "/care-hub", icon: HeartHandshake },
+    { label: "Genetic Twin", href: "#genetic-digital-twin", icon: Dna },
     { label: "Health Copilot", href: "#health-copilot", icon: MessageSquareText }
   ];
   const secondaryItems = ["Goals", "Meds", "Visits", "Family"];
+  const geneticItems = [
+    "Genetic Profile",
+    "Biomarker Dashboard",
+    "Nutrigenomics",
+    "DNA Insights",
+    "Food Response Analysis",
+    "Vitamin & Mineral Profile",
+    "Metabolic Profile",
+    "Longevity Dashboard",
+    "Genetic Risk Dashboard",
+    "Precision Nutrition"
+  ];
 
   return (
     <aside className="hidden h-screen w-64 shrink-0 border-r border-ink/10 bg-white/94 xl:sticky xl:top-0 xl:flex xl:flex-col">
@@ -202,6 +222,17 @@ export function EmployeeSidebar() {
               </a>
             );
           })}
+        </div>
+
+        <div className="mt-6 border-t border-ink/10 pt-5">
+          <p className="px-3 text-xs font-semibold uppercase tracking-[0.14em] text-graphite">Genetic Twin</p>
+          <div className="mt-3 grid gap-2">
+            {geneticItems.map((item) => (
+              <a key={item} href="#genetic-digital-twin" className="rounded-lg border border-ink/10 bg-white px-3 py-2 text-xs font-semibold text-graphite shadow-hairline transition hover:border-ion/30 hover:text-ion">
+                {item}
+              </a>
+            ))}
+          </div>
         </div>
 
         <div className="mt-6 border-t border-ink/10 pt-5">
@@ -901,6 +932,397 @@ export function UploadReportWidget() {
             <p className="text-sm font-semibold text-ink">{step}</p>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+export function GeneticDigitalTwinModule() {
+  const geneticScores = [
+    { label: "Biomarker Health", value: 78, detail: "Current reports + DNA layer", icon: FlaskConical, color: "#0f766e" },
+    { label: "Biological Age", value: 31, detail: "3 years younger than actual", icon: Gauge, color: "#2f6fed" },
+    { label: "Longevity Score", value: 82, detail: "Improving with sleep trend", icon: Sparkles, color: "#a26814" },
+    { label: "Nutrition Fit", value: 74, detail: "Low glycemic plan favored", icon: Utensils, color: "#e2495d" }
+  ];
+  const biomarkerIntelligence = [
+    ["Blood Sugar", "HbA1c", "5.7%", "4.8-5.6%", "5.9%", "Improving", "Borderline", "Reduce evening carbs and add post-meal walks."],
+    ["Lipids", "LDL", "118 mg/dL", "<100", "129", "Improving", "Medium", "Increase fiber and prioritize unsaturated fats."],
+    ["Inflammation", "CRP", "2.8 mg/L", "<1.0", "3.4", "Improving", "Medium", "Improve sleep consistency and omega-3 intake."],
+    ["Nutrition", "Vitamin D", "24 ng/mL", "30-100", "21", "Improving", "Low", "Add sunlight, fortified foods, and clinician-approved supplement."],
+    ["Kidney", "eGFR", "96", ">90", "94", "Stable", "Normal", "Maintain hydration and blood pressure tracking."],
+    ["Hormones", "TSH", "3.1 mIU/L", "0.4-4.0", "3.4", "Stable", "Watch", "Monitor fatigue and repeat thyroid panel if symptoms persist."]
+  ];
+  const foodResponses = [
+    { name: "Carbohydrate Sensitivity", genetic: "Higher glucose response tendency", biomarker: "HbA1c borderline", recommendation: "Low glycemic meals, 10-minute walks after dinner", confidence: 88 },
+    { name: "Fat Metabolism", genetic: "Moderate saturated fat sensitivity", biomarker: "LDL still above target", recommendation: "Prefer nuts, olive oil, avocado, and fatty fish", confidence: 81 },
+    { name: "Protein Utilization", genetic: "Average utilization pattern", biomarker: "Weight trend improving", recommendation: "Protein-first breakfast and strength training days", confidence: 76 },
+    { name: "Caffeine Response", genetic: "Slow caffeine clearance", biomarker: "Sleep recovery uneven", recommendation: "Stop caffeine after 1 PM", confidence: 84 },
+    { name: "Lactose Tolerance", genetic: "Possible reduced tolerance", biomarker: "No inflammation spike confirmed", recommendation: "Monitor dairy symptoms for 14 days", confidence: 67 },
+    { name: "Hydration Response", genetic: "Higher sweat sodium tendency", biomarker: "Kidney markers stable", recommendation: "Electrolytes on high-sweat workout days", confidence: 79 }
+  ];
+  const vitaminProfiles = [
+    ["Vitamin D", "24 ng/mL", "Lower utilization pattern", "Low", "Eggs, mushrooms, fortified milk", "Discuss D3 plan with clinician", "+3 ng/mL"],
+    ["Vitamin B12", "450 pg/mL", "Normal absorption", "Normal", "Dairy, eggs, fish", "Maintenance only", "+30 pg/mL"],
+    ["Iron", "78 ug/dL", "Average transport", "Watch", "Lentils, spinach, lean meat", "Pair with vitamin C foods", "Stable"],
+    ["Magnesium", "1.8 mg/dL", "Higher stress depletion", "Watch", "Pumpkin seeds, nuts, legumes", "Consider sleep-support timing", "-0.1"],
+    ["Zinc", "82 ug/dL", "Average utilization", "Normal", "Seeds, beans, seafood", "Food-first approach", "Stable"],
+    ["Folate", "8.9 ng/mL", "Methylation support needed", "Watch", "Leafy greens, beans", "Review with nutritionist", "+0.4"]
+  ];
+  const metabolicData = [
+    { month: "Jan", metabolic: 65, longevity: 71, inflammation: 58 },
+    { month: "Feb", metabolic: 67, longevity: 73, inflammation: 55 },
+    { month: "Mar", metabolic: 70, longevity: 75, inflammation: 51 },
+    { month: "Apr", metabolic: 73, longevity: 78, inflammation: 47 },
+    { month: "May", metabolic: 76, longevity: 82, inflammation: 42 }
+  ];
+  const dnaLayers = ["Medical Records", "Wearable Data", "Lifestyle Data", "Biomarkers", "Genetics", "AI Predictions"];
+  const uploadProviders = ["23andMe", "AncestryDNA", "MyHeritage", "CircleDNA", "Nutrigenomix", "Custom Laboratory Reports"];
+  const dataTables = [
+    "genetic_reports",
+    "dna_variants",
+    "genetic_traits",
+    "biomarkers",
+    "biomarker_history",
+    "food_response_profiles",
+    "nutrigenomics_recommendations",
+    "metabolic_scores",
+    "longevity_scores",
+    "vitamin_profiles",
+    "supplement_plans",
+    "nutrition_plans"
+  ];
+
+  return (
+    <section id="genetic-digital-twin" className={`${card} overflow-hidden`}>
+      <div className="border-b border-ink/10 bg-ink p-5 text-white">
+        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/60">Premium Module</p>
+            <h2 className="mt-2 text-3xl font-semibold">Genetic Digital Twin</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-white/72">
+              Combines DNA reports, biomarkers, wearables, lifestyle signals, and AI predictions for precision nutrition and personalized health planning.
+            </p>
+          </div>
+          <div className="grid w-full max-w-sm grid-cols-2 gap-2 text-xs font-semibold">
+            {["PDF", "CSV", "VCF", "Genetic data files"].map((format) => (
+              <span key={format} className="rounded-lg bg-white/10 px-3 py-2 text-center text-white/80">{format}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-5 p-5">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {geneticScores.map((score) => {
+            const Icon = score.icon;
+            return (
+              <article key={score.label} className="rounded-lg border border-ink/10 bg-white p-4 shadow-hairline">
+                <div className="flex items-start justify-between">
+                  <span className="grid h-11 w-11 place-items-center rounded-lg bg-mist" style={{ color: score.color }}>
+                    <Icon size={21} />
+                  </span>
+                  <p className="text-3xl font-semibold text-ink">{score.value}</p>
+                </div>
+                <p className="mt-3 font-semibold text-ink">{score.label}</p>
+                <p className="mt-1 text-xs text-graphite">{score.detail}</p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-mist">
+                  <div className="h-full rounded-full" style={{ width: `${score.value}%`, backgroundColor: score.color }} />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+          <section className="rounded-lg border border-ink/10 p-4">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-lg bg-ion/10 text-ion">
+                <UploadCloud size={21} />
+              </span>
+              <div>
+                <h3 className="font-semibold text-ink">DNA Test Upload Flow</h3>
+                <p className="text-sm text-graphite">Upload genetic reports and connect them to the permanent twin layer.</p>
+              </div>
+            </div>
+            <div className="mt-4 rounded-lg border-2 border-dashed border-ion/30 bg-mist p-5 text-center">
+              <Dna className="mx-auto text-ion" size={42} />
+              <p className="mt-3 font-semibold text-ink">Drop DNA report or genetic data file</p>
+              <p className="mt-1 text-xs text-graphite">Supported providers: {uploadProviders.join(", ")}.</p>
+              <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-ion px-5 py-3 text-sm font-semibold text-white">
+                <UploadCloud size={17} /> Upload DNA Report
+              </button>
+            </div>
+            <div className="mt-4 grid gap-2">
+              {["Validate file", "Extract variants", "Map traits", "Update genetic layer", "Generate AI explanation"].map((step, index) => (
+                <div key={step} className="flex items-center gap-3 rounded-lg bg-mist p-3">
+                  <span className="grid h-7 w-7 place-items-center rounded-full bg-white text-xs font-semibold text-ion">{index + 1}</span>
+                  <p className="text-sm font-semibold text-ink">{step}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-ink/10 p-4">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+              <div>
+                <h3 className="font-semibold text-ink">Genetic Profile Dashboard</h3>
+                <p className="text-sm text-graphite">DNA summary, traits, predispositions, metabolism, nutrition, exercise, sleep, stress, and drug response.</p>
+              </div>
+              <span className="rounded-full bg-clinical/10 px-3 py-1 text-xs font-semibold text-clinical">Twin confidence 91%</span>
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {[
+                ["Health Predispositions", "Metabolic syndrome, inflammation, vitamin D deficiency"],
+                ["Nutrition Insights", "Low glycemic, higher omega-3, moderate saturated fat"],
+                ["Exercise Response", "Strong response to mixed cardio + resistance"],
+                ["Sleep Genetics", "Caffeine sensitivity affects sleep recovery"],
+                ["Stress Response", "Higher cortisol recovery support needed"],
+                ["Drug Response", "Clinician review required before medication decisions"]
+              ].map(([title, detail]) => (
+                <article key={title} className="rounded-lg bg-mist p-3">
+                  <p className="font-semibold text-ink">{title}</p>
+                  <p className="mt-2 text-xs leading-5 text-graphite">{detail}</p>
+                </article>
+              ))}
+            </div>
+            <div className="mt-5 h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={metabolicData}>
+                  <CartesianGrid stroke="#dbe7e4" vertical={false} />
+                  <XAxis dataKey="month" stroke="#647176" />
+                  <YAxis stroke="#647176" />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="metabolic" stroke="#0f766e" fill="#0f766e" fillOpacity={0.16} />
+                  <Area type="monotone" dataKey="longevity" stroke="#2f6fed" fill="#2f6fed" fillOpacity={0.12} />
+                  <Area type="monotone" dataKey="inflammation" stroke="#e2495d" fill="#e2495d" fillOpacity={0.08} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </div>
+
+        <section className="rounded-lg border border-ink/10 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="font-semibold text-ink">Biomarker Intelligence Dashboard</h3>
+              <p className="text-sm text-graphite">Current value, normal range, previous value, trend, risk, AI explanation, and recommended action.</p>
+            </div>
+            <FlaskConical className="hidden text-clinical sm:block" size={24} />
+          </div>
+          <div className="mt-4 overflow-hidden overflow-x-auto rounded-lg border border-ink/10">
+            <table className="w-full min-w-[920px] text-left text-sm">
+              <thead className="bg-mist text-xs uppercase text-graphite">
+                <tr>
+                  {["Section", "Marker", "Current", "Normal Range", "Previous", "Trend", "Risk", "AI Action"].map((heading) => (
+                    <th key={heading} className="px-4 py-3">{heading}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-ink/10">
+                {biomarkerIntelligence.map(([section, marker, current, normal, previous, trend, risk, action]) => (
+                  <tr key={`${section}-${marker}`}>
+                    <td className="px-4 py-3 font-semibold text-ink">{section}</td>
+                    <td className="px-4 py-3 text-graphite">{marker}</td>
+                    <td className="px-4 py-3 font-semibold text-ink">{current}</td>
+                    <td className="px-4 py-3 text-graphite">{normal}</td>
+                    <td className="px-4 py-3 text-graphite">{previous}</td>
+                    <td className="px-4 py-3 text-clinical">{trend}</td>
+                    <td className="px-4 py-3">
+                      <span className={`rounded-full px-2 py-1 text-xs font-semibold ${risk === "Normal" ? "bg-clinical/10 text-clinical" : risk === "Low" || risk === "Medium" ? "bg-amber/10 text-amber" : "bg-ion/10 text-ion"}`}>
+                        {risk}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-graphite">{action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
+          <section className="rounded-lg border border-ink/10 p-4">
+            <h3 className="font-semibold text-ink">How My Body Responds to Food</h3>
+            <p className="mt-1 text-sm text-graphite">Combines DNA, blood reports, weight trends, lifestyle, and wearable data.</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {foodResponses.map((item) => (
+                <article key={item.name} className="rounded-lg bg-mist p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-semibold text-ink">{item.name}</p>
+                    <span className="rounded-full bg-white px-2 py-1 text-xs font-semibold text-ion">{item.confidence}%</span>
+                  </div>
+                  <p className="mt-2 text-xs leading-5 text-graphite"><span className="font-semibold text-ink">Genetic:</span> {item.genetic}</p>
+                  <p className="mt-1 text-xs leading-5 text-graphite"><span className="font-semibold text-ink">Biomarker:</span> {item.biomarker}</p>
+                  <p className="mt-2 rounded-lg bg-white p-2 text-xs font-semibold text-clinical">{item.recommendation}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-ink/10 p-4">
+            <h3 className="font-semibold text-ink">Precision Nutrition Dashboard</h3>
+            <p className="mt-1 text-sm text-graphite">Recommended diet type: Low glycemic Mediterranean vegetarian.</p>
+            <div className="mt-4 grid gap-3">
+              {[
+                ["Foods to eat more", "Lentils, beans, leafy greens, curd, nuts, seeds, berries"],
+                ["Foods to limit", "Refined flour, sugary drinks, late-night desserts, fried snacks"],
+                ["Foods to monitor", "Dairy, gluten-heavy meals, caffeine after lunch"],
+                ["Hydration goals", "2.8 L water, electrolytes on workout days"],
+                ["Supplement guidance", "Vitamin D and magnesium review with clinician"],
+                ["Meal timing", "12-hour eating window and protein-first breakfast"]
+              ].map(([title, detail]) => (
+                <div key={title} className="flex items-start gap-3 rounded-lg bg-mist p-3">
+                  <Utensils className="mt-0.5 shrink-0 text-clinical" size={17} />
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{title}</p>
+                    <p className="text-xs leading-5 text-graphite">{detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <section className="rounded-lg border border-ink/10 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="font-semibold text-ink">Vitamin & Mineral Intelligence</h3>
+              <p className="text-sm text-graphite">Current biomarker, genetic utilization, risk, foods, supplement guidance, and trend.</p>
+            </div>
+            <Pill className="hidden text-amber sm:block" size={24} />
+          </div>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {vitaminProfiles.map(([name, current, pattern, risk, foods, supplement, trend]) => (
+              <article key={name} className="rounded-lg border border-ink/10 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-ink">{name}</p>
+                    <p className="text-sm text-graphite">{current}</p>
+                  </div>
+                  <span className={`rounded-full px-2 py-1 text-xs font-semibold ${risk === "Normal" ? "bg-clinical/10 text-clinical" : "bg-amber/10 text-amber"}`}>{risk}</span>
+                </div>
+                <p className="mt-3 text-xs leading-5 text-graphite">Genetic pattern: {pattern}</p>
+                <p className="mt-2 text-xs leading-5 text-graphite">Foods: {foods}</p>
+                <p className="mt-2 rounded-lg bg-mist p-2 text-xs font-semibold text-ink">{supplement}</p>
+                <p className="mt-2 text-xs font-semibold text-clinical">Trend: {trend}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <div className="grid gap-5 xl:grid-cols-3">
+          <section className="rounded-lg border border-ink/10 p-4 xl:col-span-1">
+            <h3 className="font-semibold text-ink">Metabolic Digital Twin</h3>
+            <div className="mt-4 grid gap-3">
+              {[
+                ["Metabolic Age", "29"],
+                ["Insulin Sensitivity", "72/100"],
+                ["Fat Burning Efficiency", "68/100"],
+                ["Recovery Score", "76/100"],
+                ["Energy Utilization", "74/100"],
+                ["Muscle Maintenance", "81/100"]
+              ].map(([label, value]) => (
+                <div key={label} className="flex items-center justify-between rounded-lg bg-mist p-3">
+                  <p className="text-sm font-semibold text-graphite">{label}</p>
+                  <p className="font-semibold text-ink">{value}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section className="rounded-lg border border-ink/10 p-4 xl:col-span-2">
+            <h3 className="font-semibold text-ink">Longevity Dashboard</h3>
+            <p className="mt-1 text-sm text-graphite">Biological age, projected healthspan, inflammation trend, metabolic trend, sleep quality, and fitness trend.</p>
+            <div className="mt-4 h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={metabolicData}>
+                  <CartesianGrid stroke="#dbe7e4" vertical={false} />
+                  <XAxis dataKey="month" stroke="#647176" />
+                  <YAxis stroke="#647176" />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="longevity" stroke="#2f6fed" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="metabolic" stroke="#0f766e" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="inflammation" stroke="#e2495d" strokeWidth={3} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
+          <section className="rounded-lg border border-ink/10 p-4">
+            <h3 className="font-semibold text-ink">Digital Twin Layers</h3>
+            <div className="mt-4 grid gap-3 md:grid-cols-6">
+              {dnaLayers.map((layer, index) => (
+                <div key={layer} className="rounded-lg bg-mist p-3 text-center">
+                  <p className="text-xs font-semibold uppercase text-graphite">Layer {index + 1}</p>
+                  <p className="mt-2 text-sm font-semibold text-ink">{layer}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 rounded-lg bg-clinical/10 p-4 text-sm leading-6 text-ink">
+              Genetic data is stored as a permanent twin layer and used by AI predictions, risk scores, nutrition plans, supplement guidance, and nutritionist workflows.
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-ink/10 p-4">
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="text-clinical" size={22} />
+              <h3 className="font-semibold text-ink">HR Privacy Controls</h3>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-lg bg-pulse/10 p-3">
+                <p className="text-sm font-semibold text-pulse">HR must never see</p>
+                <p className="mt-2 text-xs leading-5 text-graphite">DNA reports, genetic traits, individual biomarkers, or individual health data.</p>
+              </div>
+              <div className="rounded-lg bg-clinical/10 p-3">
+                <p className="text-sm font-semibold text-clinical">HR can see only</p>
+                <p className="mt-2 text-xs leading-5 text-graphite">Aggregated population insights such as deficiency, inflammation, and metabolic risk percentages.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+          <section className="rounded-lg border border-ink/10 p-4">
+            <h3 className="font-semibold text-ink">AI Nutrigenomics Agent</h3>
+            <div className="mt-4 grid gap-2">
+              {[
+                "Analyze DNA reports",
+                "Analyze biomarkers",
+                "Analyze food logs",
+                "Analyze wearables",
+                "Generate nutrition and supplement recommendations",
+                "Explain genetic traits",
+                "Create meal plans and weekly nutrition plans"
+              ].map((capability) => (
+                <p key={capability} className="rounded-lg bg-mist px-3 py-2 text-sm font-semibold text-graphite">{capability}</p>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-ink/10 p-4">
+            <h3 className="font-semibold text-ink">Product Specification Surface</h3>
+            <p className="mt-1 text-sm text-graphite">APIs, database tables, and nutritionist integration needed for buildout.</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              <div className="rounded-lg bg-mist p-3">
+                <p className="text-sm font-semibold text-ink">APIs required</p>
+                <div className="mt-2 space-y-1 text-xs font-semibold text-graphite">
+                  {["/api/genetics/upload", "/api/genetics/traits", "/api/biomarkers/history", "/api/nutrigenomics/recommendations", "/api/nutritionist/plans"].map((api) => (
+                    <p key={api}>{api}</p>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-lg bg-mist p-3">
+                <p className="text-sm font-semibold text-ink">Database tables</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {dataTables.map((table) => (
+                    <span key={table} className="rounded bg-white px-2 py-1 text-xs font-semibold text-graphite">{table}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
   );

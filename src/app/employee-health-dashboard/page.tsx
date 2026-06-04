@@ -7,6 +7,7 @@ import {
   DigitalTwinViewer,
   EmployeeHeader,
   EmployeeSidebar,
+  GeneticDigitalTwinModule,
   HealthCopilotPanel,
   HealthScoreCard,
   HealthTimeline,
@@ -46,6 +47,7 @@ export default function EmployeeHealthDashboardPage() {
                     <BiomarkerCharts />
                     <RecommendationPanel />
                   </div>
+                  <GeneticDigitalTwinModule />
                   <SimulationEngine />
                   <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
                     <UploadReportWidget />
